@@ -125,8 +125,9 @@ This guide will help you deploy **Hi Bot Code** to your custom domain `https://c
 3. **Or deploy via GitHub:**
    - Go to [vercel.com](https://vercel.com)
    - Import your GitHub repository
-   - Vercel auto-detects it's a static site
-   - Click Deploy
+   - **Root Directory:** Either leave the default **repository root** (a root `vercel.json` installs and builds inside `hibot-code` and sets **Output Directory** to `hibot-code`) **or** set **Project Settings → General → Root Directory** to `hibot-code` for a simpler layout (then only `hibot-code/vercel.json` applies).
+   - **Framework Preset:** Should be **Other** (this repo is static HTML + a small Rollup bundle, not Next.js). `vercel.json` sets `"framework": null` so Vercel does not run `next build` or require `next` in `package.json`.
+   - Click **Deploy**
 
 4. **Configure Custom Domain:**
    - Project Settings → Domains

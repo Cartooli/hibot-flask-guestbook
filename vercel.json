@@ -3,9 +3,9 @@
   "version": 2,
   "public": true,
   "framework": null,
-  "installCommand": "npm install",
-  "buildCommand": "npm run build",
-  "outputDirectory": ".",
+  "installCommand": "cd hibot-code && npm install",
+  "buildCommand": "cd hibot-code && npm run build",
+  "outputDirectory": "hibot-code",
   "headers": [
     {
       "source": "/(.*)",
