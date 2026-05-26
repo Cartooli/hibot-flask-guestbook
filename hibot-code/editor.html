@@ -1375,25 +1375,32 @@ white-space:nowrap;
  visibility:hidden;
  }
  
- /* Show active section */
- .top.mobile-active{
- display:flex !important;
- flex-direction:column;
- height: calc(100vh - var(--mobile-tabs-height)) !important; /* Subtract mobile tabs height */
- height: calc(100dvh - var(--mobile-tabs-height)) !important; /* Dynamic viewport minus tabs */
- min-height:0 !important;
- max-height: calc(100vh - var(--mobile-tabs-height)) !important;
- max-height: calc(100dvh - var(--mobile-tabs-height)) !important;
- background:white !important; /* White background for preview mode */
- border:none !important;
- box-shadow:none !important;
- margin:0 !important;
- padding:0 !important;
- overflow:hidden !important; /* Prevent overflow, let children handle scrolling */
- gap:0 !important;
- }
- 
- /* Ensure white background for entire preview area on mobile */
+/* Show active section */
+.top.mobile-active{
+display:flex !important;
+flex-direction:column;
+height: calc(100vh - var(--mobile-tabs-height)) !important; /* Subtract mobile tabs height */
+height: calc(100dvh - var(--mobile-tabs-height)) !important; /* Dynamic viewport minus tabs */
+min-height:0 !important;
+max-height: calc(100vh - var(--mobile-tabs-height)) !important;
+max-height: calc(100dvh - var(--mobile-tabs-height)) !important;
+background:white !important; /* White background for preview mode */
+border:none !important;
+box-shadow:none !important;
+margin:0 !important;
+padding:0 !important;
+overflow:hidden !important; /* Prevent overflow, let children handle scrolling */
+gap:0 !important;
+}
+
+/* FINDING-003: In "edit" tab, both topRow and sidePanel get mobile-active.
+   The white background is only correct for preview mode.
+   Detect edit tab via parent :has(.panel.mobile-active) and restore dark bg. */
+main.app:has(.panel.mobile-active) .top.mobile-active{
+background:var(--bg) !important;
+}
+
+/* Ensure white background for entire preview area on mobile */
  .top.mobile-active > .preview-wrap{
  background:white !important;
  flex:1;
