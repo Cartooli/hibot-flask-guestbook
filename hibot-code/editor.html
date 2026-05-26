@@ -80,9 +80,10 @@
  Last updated: 2026-02-18
  Cache busting: v2.6.0
  -->
- <style>
- :root{
- --bg:#0A0A0A; /* page chrome - darker for better contrast */
+<style>
+:root{
+color-scheme:dark; /* FINDING-006: native browser UI renders in dark mode by default */
+--bg:#0A0A0A; /* page chrome - darker for better contrast */
  --ink:#f1f5f9; /* WCAG AAA: 17:1 contrast ratio */
  --muted:#a8b5c9; /* WCAG AAA: 7.2:1 contrast ratio (was 3.7:1) */
  --accent:#F5A524; /* Brighter green for better visibility */
@@ -2216,6 +2217,7 @@ background:var(--bg) !important;
 
 /* Dark mode for editor UI */
 body.light-mode{
+color-scheme:light; /* FINDING-006: native browser UI (scrollbars, inputs) renders in light mode */
 --bg:#f1f5f9;
 --ink:#0f172a;
 --muted:#64748b;
