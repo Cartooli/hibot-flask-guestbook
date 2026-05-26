@@ -46,6 +46,7 @@
       --font-display: 'Syne', ui-sans-serif, system-ui, sans-serif;
       --font-ui: 'DM Sans', ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
       --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      --body: rgba(232,232,227,.82);
     }
     *, *::before, *::after { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -124,8 +125,8 @@
     main { padding-bottom: 24px; }
     .wrap { max-width: 880px; margin: 0 auto; padding: 0 24px; }
     section { padding: 36px 0; }
-    section h2 { font-family: var(--font-display); font-size: clamp(1.45rem, 3vw, 1.85rem); font-weight: 700; margin: 0 0 16px; letter-spacing: -0.01em; }
-    section p { color: var(--muted); font-size: 1rem; line-height: 1.7; margin: 0 0 14px; }
+    section h2 { font-family: var(--font-display); font-size: clamp(1.45rem, 3vw, 1.85rem); font-weight: 700; margin: 0 0 16px; letter-spacing: -0.01em; text-wrap: balance; }
+    section p { color: var(--body); font-size: 1rem; line-height: 1.7; margin: 0 0 14px; }
     section p strong, section li strong { color: var(--ink); }
     .sep { border: none; border-top: 1px solid var(--border); margin: 0; }
 
@@ -258,6 +259,35 @@
       :root { --border: rgba(255,255,255,.45); --muted: #d4dce8; --ink: #fff; }
       .btn-primary { box-shadow: 0 0 0 2px #fff; }
     }
+    /* ── Share section ─────────────────────────────────────────── */
+    .share-section { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: rgba(255,255,255,.012); padding: 52px 24px; }
+    .share-inner { max-width: 880px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 28px; flex-wrap: wrap; }
+    .share-text { flex: 1; min-width: 220px; }
+    .share-eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin: 0 0 8px; display: block; }
+    .share-headline { font-family: var(--font-display); font-size: clamp(1.25rem, 2.6vw, 1.6rem); font-weight: 700; margin: 0 0 8px; letter-spacing: -0.01em; text-wrap: balance; color: var(--ink); }
+    .share-sub { color: var(--muted); font-size: 0.9rem; line-height: 1.65; margin: 0; max-width: 440px; }
+    .btn-share { flex-shrink: 0; display: inline-flex; align-items: center; gap: 8px; padding: 13px 22px; border-radius: var(--radius-sm); background: var(--panel-2); border: 1px solid var(--border-hover); color: var(--ink); font-size: 14px; font-weight: 600; cursor: pointer; transition: border-color .2s, color .15s, transform .15s, box-shadow .2s; white-space: nowrap; font-family: var(--font-ui); min-height: 48px; }
+    .btn-share:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,.28); }
+    @media (max-width: 600px) { .share-inner { flex-direction: column; align-items: flex-start; } }
+    /* ── Share modal ─────────────────────────────────────────── */
+    .share-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.68); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity .2s ease; }
+    .share-overlay.is-open { opacity: 1; pointer-events: auto; }
+    .share-modal-card { background: var(--panel); border: 1px solid var(--border-hover); border-radius: var(--radius); padding: 28px; width: 100%; max-width: 400px; box-shadow: 0 24px 64px rgba(0,0,0,.55); transform: translateY(10px) scale(.99); opacity: 0; transition: transform .26s cubic-bezier(.34,1.56,.64,1), opacity .2s ease; }
+    .share-overlay.is-open .share-modal-card { transform: translateY(0) scale(1); opacity: 1; }
+    .share-modal-hdr { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+    .share-modal-hdr h3 { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; margin: 0; color: var(--ink); }
+    .share-close { background: none; border: 1px solid transparent; color: var(--muted); cursor: pointer; padding: 4px; border-radius: 6px; display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; transition: color .15s, border-color .15s; flex-shrink: 0; margin-top: 1px; }
+    .share-close:hover { color: var(--ink); border-color: var(--border); }
+    .share-modal-sub { color: var(--muted); font-size: 0.875rem; line-height: 1.55; margin: 0 0 20px; }
+    .share-copy-btn { display: flex; align-items: center; gap: 9px; width: 100%; padding: 12px 16px; background: var(--accent-dim); border: 1px solid rgba(245,165,36,.25); border-radius: var(--radius-sm); color: var(--accent); font-size: 14px; font-weight: 600; cursor: pointer; font-family: var(--font-ui); transition: background .15s, border-color .15s; margin-bottom: 16px; }
+    .share-copy-btn:hover { background: rgba(245,165,36,.2); border-color: rgba(245,165,36,.45); }
+    .share-or { display: flex; align-items: center; gap: 10px; margin: 0 0 14px; }
+    .share-or span { font-size: 12px; color: var(--muted); white-space: nowrap; }
+    .share-or::before, .share-or::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .share-social-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .share-social-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; padding: 12px 6px; background: var(--panel-2); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--muted); font-size: 11px; font-weight: 600; text-decoration: none; transition: border-color .15s, color .15s, background .15s; }
+    .share-social-item:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+    .share-social-item svg { width: 18px; height: 18px; flex-shrink: 0; }
   </style>
 </head>
 <body>
@@ -794,6 +824,53 @@
     </div>
   </section>
 
+  <!-- ─── SHARE ─── -->
+  <section class="share-section" aria-labelledby="share-sec-h">
+    <div class="share-inner">
+      <div class="share-text">
+        <span class="share-eyebrow">Pass it on</span>
+        <h2 id="share-sec-h" class="share-headline">Know a teacher who could use this?</h2>
+        <p class="share-sub">If this guide saved you time, it might help a colleague, homeschool parent, or school volunteer too.</p>
+      </div>
+      <button class="btn-share" id="share-btn" onclick="handleShare()" aria-haspopup="dialog">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        Share this guide
+      </button>
+    </div>
+  </section>
+
+  <!-- ─── SHARE MODAL ─── -->
+  <div class="share-overlay" id="share-overlay" role="dialog" aria-modal="true" aria-labelledby="share-dialog-title" aria-hidden="true">
+    <div class="share-modal-card">
+      <div class="share-modal-hdr">
+        <h3 id="share-dialog-title">Share this guide</h3>
+        <button class="share-close" onclick="closeShareModal()" aria-label="Close share dialog">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <p class="share-modal-sub">Send this to a teacher, parent, or homeschooler you think it can help.</p>
+      <button class="share-copy-btn" id="share-copy-btn" onclick="copyShareUrl(this)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copy link
+      </button>
+      <div class="share-or"><span>or share on</span></div>
+      <div class="share-social-grid">
+        <a id="share-x" href="#" class="share-social-item" target="_blank" rel="noopener" aria-label="Share on X">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          <span>X / Twitter</span>
+        </a>
+        <a id="share-wa" href="#" class="share-social-item" target="_blank" rel="noopener" aria-label="Share on WhatsApp">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          <span>WhatsApp</span>
+        </a>
+        <a id="share-email" href="#" class="share-social-item" aria-label="Share via email">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          <span>Email</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
   <hr class="sep" />
 
   <!-- ─── FINAL CTA ─── -->
@@ -825,31 +902,77 @@
 </footer>
 
 <script>
-  // Mobile nav toggle (matches index.html convention)
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {
       navigator.serviceWorker.register('sw.js').catch(function () {});
     });
   }
 
-  // Copy-to-clipboard for prompt boxes
   function copyPrompt(btn) {
-    const box = btn.closest('.prompt-box');
-    // Get text nodes only (exclude label and button)
-    const textNodes = Array.from(box.childNodes)
-      .filter(n => n.nodeType === Node.TEXT_NODE)
-      .map(n => n.textContent.trim())
+    var box = btn.closest('.prompt-box');
+    var textNodes = Array.from(box.childNodes)
+      .filter(function (n) { return n.nodeType === Node.TEXT_NODE; })
+      .map(function (n) { return n.textContent.trim(); })
       .filter(Boolean);
-    const text = textNodes.join(' ').replace(/\s+/g, ' ').trim();
+    var text = textNodes.join(' ').replace(/\s+/g, ' ').trim();
     if (navigator.clipboard && text) {
-      navigator.clipboard.writeText(text).then(() => {
-        const orig = btn.textContent;
+      navigator.clipboard.writeText(text).then(function () {
+        var orig = btn.textContent;
         btn.textContent = 'Copied!';
         btn.style.color = 'var(--accent)';
-        setTimeout(() => { btn.textContent = orig; btn.style.color = ''; }, 2000);
+        setTimeout(function () { btn.textContent = orig; btn.style.color = ''; }, 2000);
       });
     }
   }
+
+  (function () {
+    var SHARE_TEXT = 'Free guide for teachers and homeschool parents: build your own classroom tools using AI — no coding needed.';
+    function setUrls() {
+      var url = encodeURIComponent(window.location.href);
+      var msg = encodeURIComponent(SHARE_TEXT + ' ' + window.location.href);
+      var el = document.getElementById('share-x');
+      if (el) el.href = 'https://x.com/intent/tweet?text=' + encodeURIComponent(SHARE_TEXT) + '&url=' + url;
+      el = document.getElementById('share-wa');
+      if (el) el.href = 'https://wa.me/?text=' + msg;
+      el = document.getElementById('share-email');
+      if (el) el.href = 'mailto:?subject=' + encodeURIComponent('Guide: Build classroom tools with AI (free)') + '&body=' + msg;
+    }
+    window.handleShare = function () {
+      if (navigator.share) {
+        navigator.share({ title: document.title, text: SHARE_TEXT, url: window.location.href }).catch(function () {});
+      } else {
+        setUrls();
+        var overlay = document.getElementById('share-overlay');
+        overlay.setAttribute('aria-hidden', 'false');
+        requestAnimationFrame(function () { overlay.classList.add('is-open'); });
+        document.body.style.overflow = 'hidden';
+        setTimeout(function () { var btn = overlay.querySelector('.share-close'); if (btn) btn.focus(); }, 60);
+      }
+    };
+    window.closeShareModal = function () {
+      var overlay = document.getElementById('share-overlay');
+      overlay.classList.remove('is-open');
+      document.body.style.overflow = '';
+      setTimeout(function () { overlay.setAttribute('aria-hidden', 'true'); }, 220);
+      var shareBtn = document.getElementById('share-btn');
+      if (shareBtn) shareBtn.focus();
+    };
+    window.copyShareUrl = function (btn) {
+      if (!navigator.clipboard) return;
+      navigator.clipboard.writeText(window.location.href).then(function () {
+        var orig = btn.innerHTML;
+        btn.innerHTML = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+        btn.style.borderColor = 'rgba(245,165,36,.5)';
+        setTimeout(function () { btn.innerHTML = orig; btn.style.borderColor = ''; }, 2500);
+      });
+    };
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { var o = document.getElementById('share-overlay'); if (o && o.classList.contains('is-open')) closeShareModal(); }
+    });
+    document.addEventListener('click', function (e) {
+      var o = document.getElementById('share-overlay'); if (o && o.classList.contains('is-open') && e.target === o) closeShareModal();
+    });
+  })();
 </script>
 </body>
 </html>
