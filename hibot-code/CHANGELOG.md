@@ -5,12 +5,19 @@ Canonical version lives in [`VERSION`](VERSION); the service worker
 
 ## Unreleased
 
-- **PWA / brand:** `VERSION` → `2.13.5`; `sw.js` `CACHE_NAME` → `bws-v2.13.5`. `favicon.svg` aligned to `#0A0A0A` + amber ring; `editor.html` typography tokens slightly larger with roomier line-height; default `get-started-coding-og.png` regenerated (amber, Outfit/DM Sans) via `scripts/og-default-brand.html` + headless Chrome. `learn-tier-6.html` gains full Twitter card + `og:image` dimensions/alt. `index.html` favicon query aligned to `2.13.5`.
 - **Content (cross-link sweep):** Six AI-cluster sibling pages now link to the new `ai-build-stack.html` in both their nav and footer — `ai-coding-landscape-2026.html`, `cursor-slack-github.html`, `get-started-coding.html`, `how-backends-work-vercel-railway.html`, `ai-roi-calculator.html`, `pull-requests-github.html`. The page is now reachable from every adjacent AI/dev-tooling page, not just `index.html`.
 - **PWA:** `VERSION` and `sw.js` `CACHE_NAME` bumped to `2.13.4` / `bws-v2.13.4` so returning PWA users get the cross-linked nav/footers on activate.
 - **Content:** New **AI Build Stack** showcase page (`ai-build-stack.html`) — an opinionated single-thesis landing for the 2026 stack: Cursor (referral CTA), Vercel + AI Gateway, Claude Sonnet 4.6, Neon via Vercel Marketplace, GitHub, Railway when you need it. Includes anti-patterns block, the loop, and FTC affiliate disclosure (Cursor + Railway). Linked from the Resources flyout and footer in `index.html`. Added to `sitemap.xml`.
 - **PWA:** `VERSION` and `sw.js` `CACHE_NAME` bumped to `2.13.3` / `bws-v2.13.3`; `/ai-build-stack.html` added to `CORE_ASSETS`.
 - **Editor:** **Import HTML** — side-panel button opens a modal to paste a full document or choose a `.html` / `.htm` file (Tryit-style workflow). Respects the same size guard as share links (~400 KB). Asks before replacing unsaved edits vs the session baseline. Initial load now `await`s shared URL decode so hash shares apply before the default template runs.
+
+## Version 2.13.5 — Brand chrome, default OG, editor typography (May 2026)
+
+- **Brand / favicon:** `favicon.svg` uses canonical near-black `#0A0A0A`, amber hairline frame, and monospace `</>` mark with amber gradient — aligned with `DESIGN-TOKENS.md`.
+- **Editor (typography):** Slightly larger UI rhythm (`--text-body` 17px, `--leading-body` 1.62, caption/ui-sm bumps, CodeMirror mono 14px / 1.75); corrected misleading `--accent` comment.
+- **Social (default card):** `get-started-coding-og.png` regenerated at 1200×630 with amber-on-charcoal art and self-hosted Outfit + DM Sans; reproducible via `scripts/og-default-brand.html` + headless Chrome screenshot.
+- **SEO:** `learn-tier-6.html` adds `twitter:*` parity, `og:image` width/height/alt.
+- **PWA:** `VERSION` and `sw.js` `CACHE_NAME` bumped to `2.13.5` / `bws-v2.13.5`; `index.html` and `editor.html` favicon query strings aligned to `2.13.5`.
 
 ## Version 2.13.2 — World-class color contrast (May 2026)
 
