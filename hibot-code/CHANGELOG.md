@@ -5,6 +5,7 @@ Canonical version lives in [`VERSION`](VERSION); the service worker
 
 ## Unreleased
 
+- **PWA / brand:** `VERSION` → `2.13.5`; `sw.js` `CACHE_NAME` → `bws-v2.13.5`. `favicon.svg` aligned to `#0A0A0A` + amber ring; `editor.html` typography tokens slightly larger with roomier line-height; default `get-started-coding-og.png` regenerated (amber, Outfit/DM Sans) via `scripts/og-default-brand.html` + headless Chrome. `learn-tier-6.html` gains full Twitter card + `og:image` dimensions/alt. `index.html` favicon query aligned to `2.13.5`.
 - **Content (cross-link sweep):** Six AI-cluster sibling pages now link to the new `ai-build-stack.html` in both their nav and footer — `ai-coding-landscape-2026.html`, `cursor-slack-github.html`, `get-started-coding.html`, `how-backends-work-vercel-railway.html`, `ai-roi-calculator.html`, `pull-requests-github.html`. The page is now reachable from every adjacent AI/dev-tooling page, not just `index.html`.
 - **PWA:** `VERSION` and `sw.js` `CACHE_NAME` bumped to `2.13.4` / `bws-v2.13.4` so returning PWA users get the cross-linked nav/footers on activate.
 - **Content:** New **AI Build Stack** showcase page (`ai-build-stack.html`) — an opinionated single-thesis landing for the 2026 stack: Cursor (referral CTA), Vercel + AI Gateway, Claude Sonnet 4.6, Neon via Vercel Marketplace, GitHub, Railway when you need it. Includes anti-patterns block, the loop, and FTC affiliate disclosure (Cursor + Railway). Linked from the Resources flyout and footer in `index.html`. Added to `sitemap.xml`.

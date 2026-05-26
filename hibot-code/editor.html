@@ -9,7 +9,7 @@
  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
  <meta http-equiv="Pragma" content="no-cache" />
  <meta http-equiv="Expires" content="0" />
- <meta name="version" content="2.6.1" />
+ <meta name="version" content="2.13.5" />
  <meta name="build-date" content="2026-02-18" />
  
  <!-- Enhanced Content Security Policy for Safety -->
@@ -44,7 +44,7 @@
 <link rel="preload" as="font" href="/assets/fonts/rP2Yp2ywxg089UriI5-g4vlH9VoD8Cmcqbu0-K6z9mXg.woff2" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/fonts/fonts.css">
   <link rel="stylesheet" href="/assets/hibot-theme.css">
- <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2.1.0" />
+ <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2.13.5" />
  
  <!-- PWA Support -->
  <link rel="manifest" href="manifest.json" />
@@ -53,7 +53,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
  <meta name="apple-mobile-web-app-title" content="Hi Bot Code" />
- <link rel="apple-touch-icon" href="favicon.svg?v=2.1.0" />
+ <link rel="apple-touch-icon" href="favicon.svg?v=2.13.5" />
  <!--
  Hi Bot Code v2.6.0
  - No libraries, no external requests, no tracking.
@@ -88,7 +88,7 @@ color-scheme:dark; /* FINDING-006: native browser UI renders in dark mode by def
 --bg:#0A0A0A; /* page chrome - darker for better contrast */
  --ink:#f1f5f9; /* WCAG AAA: 17:1 contrast ratio */
  --muted:#a8b5c9; /* WCAG AAA: 7.2:1 contrast ratio (was 3.7:1) */
- --accent:#F5A524; /* Brighter green for better visibility */
+ --accent:#F5A524; /* Amber — brand accent (DESIGN-TOKENS) */
  --panel:#0d1219;
  --panel-ink:#f8fafc; /* Maximum brightness for readability */
  --code-bg:#080c14;
@@ -127,11 +127,11 @@ color-scheme:dark; /* FINDING-006: native browser UI renders in dark mode by def
  --surface-3: color-mix(in srgb, var(--accent) 8%, var(--bg));
 
  /* Typography + spacing rhythm (4px base) */
- --text-body: 16px;
- --text-ui-sm: 14px;
- --text-caption: 12px;
- --leading-body: 1.55;
- --leading-snug: 1.3;
+ --text-body: 17px;
+ --text-ui-sm: 15px;
+ --text-caption: 13px;
+ --leading-body: 1.62;
+ --leading-snug: 1.38;
  --space-2: 8px;
  --space-3: 12px;
  --space-4: 16px;
@@ -531,7 +531,7 @@ color-scheme:dark; /* FINDING-006: native browser UI renders in dark mode by def
  .gutter{
  background:var(--code-bg);
  color:var(--code-muted);
- font-family:var(--font-mono); font-size:13px; line-height:1.7;
+ font-family:var(--font-mono); font-size:14px; line-height:1.75;
  padding:10px 6px; text-align:right; 
  -webkit-user-select:none;
  user-select:none; border-right:1px solid var(--border);
@@ -542,7 +542,7 @@ color-scheme:dark; /* FINDING-006: native browser UI renders in dark mode by def
  min-width:0; /* Allow to shrink in flexbox */
  box-sizing:border-box; /* Include padding in width */
  background:transparent; color:var(--code-ink);
- font-family:var(--font-mono); font-size:13px; line-height:1.7;
+ font-family:var(--font-mono); font-size:14px; line-height:1.75;
  padding:10px 12px; border:none; outline:none; resize:none;
  caret-color:#7dd3fc;
  tab-size:2;
@@ -554,7 +554,7 @@ color-scheme:dark; /* FINDING-006: native browser UI renders in dark mode by def
  .code-editor-cell.cm-active .codemirror-host{ display:block !important; position:absolute; inset:0; min-height:0; overflow:auto; }
  .editor-body:has(.cm-active) > .gutter{ display:none; }
  .codemirror-host .cm-editor{ height:100%; }
- .codemirror-host .cm-scroller{ font-family:var(--font-mono); font-size:13px; line-height:1.7; }
+ .codemirror-host .cm-scroller{ font-family:var(--font-mono); font-size:14px; line-height:1.75; }
  .editor.collapsed .editor-body{display:none}
  .editor.collapsed{height:auto}
 
@@ -595,7 +595,7 @@ color-scheme:dark; /* FINDING-006: native browser UI renders in dark mode by def
  }
  .editor-pane textarea{
  flex:1; width:100%; background:transparent; color:var(--code-ink);
- font-family:var(--font-mono); font-size:13px; line-height:1.7;
+ font-family:var(--font-mono); font-size:14px; line-height:1.75;
  padding:10px 12px; border:none; outline:none; resize:none;
  caret-color:#7dd3fc; tab-size:2; overflow:auto;
  -webkit-user-select:text; user-select:text;
@@ -607,7 +607,7 @@ color-scheme:dark; /* FINDING-006: native browser UI renders in dark mode by def
  .editor-pane.cm-active .codemirror-host{ display:block; }
  .editor-pane.cm-active textarea{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; opacity:0; }
  .editor-pane .codemirror-host .cm-editor{ height:100%; }
- .editor-pane .codemirror-host .cm-scroller{ font-family:var(--font-mono); font-size:13px; line-height:1.7; }
+ .editor-pane .codemirror-host .cm-scroller{ font-family:var(--font-mono); font-size:14px; line-height:1.75; }
 
  /* ── CONSOLE PANEL ── */
  .console-panel{border-top:1px solid var(--border);flex-shrink:0;background:var(--code-bg);}
