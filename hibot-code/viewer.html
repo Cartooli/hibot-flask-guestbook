@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>HTML Viewer — paste HTML, CSS &amp; JS, see it run | Hi Bot Code</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="A clean, fast HTML viewer from Hi, Bot. Paste HTML, CSS, and JavaScript and see it render live in a safe sandbox — no download, no account." />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://code.hibot.space/viewer.html" />
+  <meta property="og:title" content="HTML Viewer — Hi Bot Code" />
+  <meta property="og:description" content="Paste HTML, CSS, and JavaScript and see it render live in a safe sandbox." />
+  <meta property="og:image" content="https://code.hibot.space/get-started-coding-og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <meta name="author" content="Hi Bot Code" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://code.hibot.space/viewer.html" />
+  <link rel="stylesheet" href="/assets/fonts/fonts.css">
+  <link rel="stylesheet" href="/assets/hibot-theme.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2.13.5" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0A0A0A" />
+  <meta name="color-scheme" content="dark" />
+
+  <style>
+    :root {
+      --bg: #0A0A0A; --ink: #E8E8E3; --muted: #8B95A1; --accent: #F5A524; --accent-soft: rgba(245, 165, 36, 0.9);
+      --accent-dim: rgba(245,165,36,.14); --panel: #111418; --panel-2: #1B1F26;
+      --border: rgba(139,149,161,.22); --border-hover: rgba(139,149,161,.45);
+      --radius: 12px; --radius-sm: 8px; --shadow: 0 8px 30px rgba(0,0,0,.35);
+      --font-display: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+      --font-ui: 'DM Sans', ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", "Fira Code", Menlo, Consolas, monospace;
+      --nav-h: 50px;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-ui);
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Nav (matches site convention) */
+    .site-nav { position: sticky; top: 0; z-index: 100; background: rgba(10,10,10,.94); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 20px; height: var(--nav-h); flex: 0 0 auto; }
+    .site-nav a.home-link { display: flex; align-items: center; gap: 7px; text-decoration: none; color: var(--accent); font-family: var(--font-display); font-weight: 800; font-size: 14px; white-space: nowrap; margin-right: 4px; min-height: 44px; }
+    .site-nav a.home-link:hover { text-decoration: underline; }
+    .nav-divider { width: 1px; height: 18px; background: var(--border); margin: 0 10px; flex-shrink: 0; }
+    .nav-links { display: flex; align-items: center; gap: 2px; flex: 1; overflow-x: auto; }
+    .nav-links > a { color: var(--muted); font-size: 13px; font-weight: 500; padding: 12px 16px; min-height: 44px; display: inline-flex; align-items: center; border-radius: 6px; text-decoration: none; transition: color .15s, background .15s; white-space: nowrap; }
+    .nav-links > a:hover { color: var(--ink); background: rgba(255,255,255,.06); }
+    .nav-links > a[aria-current="page"] { color: var(--accent); }
+    .nav-cta { margin-left: auto; background: var(--accent); color: var(--bg) !important; font-size: 13px; font-weight: 700; padding: 0 14px; min-height: 44px; display: inline-flex; align-items: center; border-radius: 6px; text-decoration: none; white-space: nowrap; transition: background .15s; }
+    .nav-cta:hover { background: #e19412; }
+
+    /* App shell */
+    .studio { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
+    .toolbar {
+      flex: 0 0 auto; display: flex; align-items: center; gap: 10px;
+      padding: 10px 16px; border-bottom: 1px solid var(--border);
+      background: var(--panel);
+    }
+    .toolbar .title { font-family: var(--font-display); font-weight: 700; font-size: 15px; margin-right: 6px; }
+    .toolbar .title span { color: var(--accent); }
+    .toolbar .spacer { flex: 1; }
+    .toolbar .hint { color: var(--muted); font-size: 12px; }
+    .tbtn {
+      display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+      font-family: var(--font-ui); font-size: 13px; font-weight: 600;
+      padding: 8px 14px; min-height: 40px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); background: var(--panel-2); color: var(--ink);
+      transition: border-color .15s, background .15s, color .15s, transform .1s;
+    }
+    .tbtn:hover { border-color: var(--accent-soft); color: var(--accent); }
+    .tbtn:active { transform: scale(.97); }
+    .tbtn.primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+    .tbtn.primary:hover { background: #e19412; color: var(--bg); }
+    .tbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .autorun { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font-size: 12px; font-weight: 500; cursor: pointer; user-select: none; }
+    .autorun input { accent-color: var(--accent); width: 15px; height: 15px; cursor: pointer; }
+
+    /* Split panes */
+    .panes { flex: 1 1 auto; display: flex; min-height: 0; }
+    .pane { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+    .pane-editor { flex: 1 1 50%; border-right: 1px solid var(--border); }
+    .pane-preview { flex: 1 1 50%; }
+
+    .gutter {
+      flex: 0 0 6px; cursor: col-resize; background: var(--border);
+      position: relative; transition: background .15s;
+    }
+    .gutter:hover, .gutter.dragging { background: var(--accent-soft); }
+    .gutter::after { content: ""; position: absolute; inset: 0 -5px; }
+
+    /* Editor tabs */
+    .tabs { flex: 0 0 auto; display: flex; align-items: stretch; background: var(--panel); border-bottom: 1px solid var(--border); }
+    .tab {
+      appearance: none; border: none; background: none; cursor: pointer;
+      font-family: var(--font-ui); font-size: 13px; font-weight: 600; color: var(--muted);
+      padding: 11px 18px; min-height: 42px; border-bottom: 2px solid transparent;
+      transition: color .15s, border-color .15s, background .15s;
+    }
+    .tab:hover { color: var(--ink); background: rgba(255,255,255,.04); }
+    .tab[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+    .editors { flex: 1 1 auto; position: relative; min-height: 0; }
+    .code {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      resize: none; border: none; outline: none;
+      background: #0c0e12; color: var(--ink);
+      font-family: var(--font-mono); font-size: 14px; line-height: 1.6;
+      padding: 16px; tab-size: 2;
+      white-space: pre; overflow: auto;
+    }
+    .code::placeholder { color: var(--muted); }
+    .code[hidden] { display: none; }
+    .code:focus { box-shadow: inset 0 0 0 2px var(--accent-dim); }
+
+    /* Preview */
+    .preview-head { flex: 0 0 auto; display: flex; align-items: center; gap: 8px; background: var(--panel); border-bottom: 1px solid var(--border); padding: 0 14px; min-height: 42px; }
+    .preview-head .dot { color: var(--muted); font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+    .preview-head .dot svg { color: var(--accent); }
+    .preview-wrap { flex: 1 1 auto; position: relative; background: #fff; min-height: 0; }
+    #preview { position: absolute; inset: 0; width: 100%; height: 100%; border: none; background: #fff; }
+
+    /* Mobile (secondary): stack panes, swap to row-resize semantics off */
+    @media (max-width: 820px) {
+      body { overflow: auto; }
+      .studio { min-height: calc(100vh - var(--nav-h)); }
+      .panes { flex-direction: column; }
+      .pane-editor, .pane-preview { flex: 1 1 auto; border-right: none; }
+      .pane-editor { border-bottom: 1px solid var(--border); min-height: 320px; }
+      .pane-preview { min-height: 320px; }
+      .gutter { display: none; }
+      .toolbar { flex-wrap: wrap; }
+      .toolbar .hint { display: none; }
+    }
+
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+    }
+
+    a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0.01ms !important; } }
+    @media (prefers-contrast: more), (prefers-contrast: high) {
+      :root { --border: rgba(255,255,255,.45); --muted: #d4dce8; --ink: #fff; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="site-nav" aria-label="Site navigation">
+  <a href="index.html" class="home-link">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+    Hi Bot Code
+  </a>
+  <div class="nav-divider" aria-hidden="true"></div>
+  <div class="nav-links">
+    <a href="editor.html">Editor</a>
+    <a href="viewer.html" aria-current="page">Viewer</a>
+    <a href="/challenges/">Challenges</a>
+    <a href="showcase.html">Showcase</a>
+    <a href="learn.html">Learn</a>
+  </div>
+  <a href="editor.html" class="nav-cta">Open full Editor →</a>
+</nav>
+
+<div class="studio">
+  <div class="toolbar">
+    <div class="title">HTML <span>Viewer</span></div>
+    <span class="hint">Paste HTML, CSS &amp; JavaScript — it renders in a safe sandbox.</span>
+    <div class="spacer"></div>
+    <label class="autorun"><input type="checkbox" id="autorun" checked /> Live update</label>
+    <button class="tbtn" id="reset" type="button" title="Reset to starter code">Reset</button>
+    <button class="tbtn primary" id="run" type="button" title="Run (Ctrl/Cmd + Enter)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+      Run
+    </button>
+  </div>
+
+  <div class="panes" id="panes">
+    <section class="pane pane-editor" id="paneEditor" aria-label="Code editors">
+      <div class="tabs" role="tablist" aria-label="Code language">
+        <button class="tab" role="tab" id="tab-html" aria-controls="code-html" aria-selected="true" data-target="code-html">HTML</button>
+        <button class="tab" role="tab" id="tab-css"  aria-controls="code-css"  aria-selected="false" data-target="code-css">CSS</button>
+        <button class="tab" role="tab" id="tab-js"   aria-controls="code-js"   aria-selected="false" data-target="code-js">JS</button>
+      </div>
+      <div class="editors">
+        <textarea class="code" id="code-html" role="tabpanel" aria-labelledby="tab-html" spellcheck="false" autocomplete="off" autocapitalize="off" wrap="off" placeholder="<!-- Paste or write HTML here -->"></textarea>
+        <textarea class="code" id="code-css"  role="tabpanel" aria-labelledby="tab-css"  spellcheck="false" autocomplete="off" autocapitalize="off" wrap="off" hidden placeholder="/* CSS here */"></textarea>
+        <textarea class="code" id="code-js"   role="tabpanel" aria-labelledby="tab-js"   spellcheck="false" autocomplete="off" autocapitalize="off" wrap="off" hidden placeholder="// JavaScript here"></textarea>
+      </div>
+    </section>
+
+    <div class="gutter" id="gutter" role="separator" aria-orientation="vertical" aria-label="Resize panes" tabindex="0"></div>
+
+    <section class="pane pane-preview" aria-label="Live preview">
+      <div class="preview-head">
+        <span class="dot">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          Live preview
+        </span>
+      </div>
+      <div class="preview-wrap">
+        <iframe id="preview" title="Live preview output" sandbox="allow-scripts allow-modals allow-forms allow-popups"></iframe>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var STORAGE_KEY = "hibot-viewer-v1";
+  var STARTER = {
+    html: '<h1>Hello! 👋</h1>\n<p>Edit the HTML, CSS, and JS tabs and watch this update.</p>\n<button id="go">Click me</button>\n<p id="out"></p>',
+    css:  'body { font-family: system-ui, sans-serif; padding: 2rem; color: #1a1a1a; }\nh1 { color: #F5A524; }\nbutton { font: inherit; padding: .6rem 1.1rem; border: 0; border-radius: 8px;\n  background: #F5A524; color: #111; cursor: pointer; }',
+    js:   'document.getElementById("go").addEventListener("click", function () {\n  document.getElementById("out").textContent = "It works! " + new Date().toLocaleTimeString();\n});'
+  };
+
+  var els = {
+    html: document.getElementById("code-html"),
+    css:  document.getElementById("code-css"),
+    js:   document.getElementById("code-js")
+  };
+  var preview = document.getElementById("preview");
+  var autorun = document.getElementById("autorun");
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
+
+  // --- Persistence (local only; the user's own code, never sent anywhere) ---
+  function load() {
+    var saved = null;
+    try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch (e) { saved = null; }
+    var src = (saved && typeof saved.html === "string") ? saved : STARTER;
+    els.html.value = src.html || "";
+    els.css.value  = src.css  || "";
+    els.js.value   = src.js   || "";
+  }
+  function save() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        html: els.html.value, css: els.css.value, js: els.js.value
+      }));
+    } catch (e) { /* storage full or blocked — non-fatal */ }
+  }
+
+  // --- Render: assemble a full document and hand it to the sandboxed iframe ---
+  function buildDoc() {
+    return '<!DOCTYPE html><html><head><meta charset="utf-8">' +
+      '<meta name="viewport" content="width=device-width, initial-scale=1">' +
+      "<style>" + els.css.value + "</style></head><body>" +
+      els.html.value +
+      "<script>\ntry {\n" + els.js.value + "\n} catch (err) {\n" +
+      "  document.body.insertAdjacentHTML('beforeend', '<pre style=\"color:#b00020;white-space:pre-wrap;font:13px/1.5 monospace;padding:8px;border-top:1px solid #eee\">' + String(err) + '</pre>');\n" +
+      "}\n<\/script></body></html>";
+  }
+  function render() {
+    // srcdoc keeps output in a unique opaque origin; sandbox has no allow-same-origin,
+    // so it cannot reach this page's cookies, localStorage, or same-origin APIs.
+    preview.srcdoc = buildDoc();
+  }
+
+  // --- Debounced live update ---
+  var timer = null;
+  function scheduleRender() {
+    save();
+    if (!autorun.checked) return;
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(render, 350);
+  }
+
+  Object.keys(els).forEach(function (k) {
+    els[k].addEventListener("input", scheduleRender);
+    // Insert two spaces on Tab instead of leaving the field.
+    els[k].addEventListener("keydown", function (e) {
+      if (e.key === "Tab") {
+        e.preventDefault();
+        var s = this.selectionStart, end = this.selectionEnd;
+        this.value = this.value.slice(0, s) + "  " + this.value.slice(end);
+        this.selectionStart = this.selectionEnd = s + 2;
+      }
+    });
+  });
+
+  // Ctrl/Cmd+Enter runs immediately.
+  document.addEventListener("keydown", function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") { e.preventDefault(); render(); }
+  });
+
+  document.getElementById("run").addEventListener("click", render);
+  document.getElementById("reset").addEventListener("click", function () {
+    if (!confirm("Reset all three editors to the starter example?")) return;
+    els.html.value = STARTER.html; els.css.value = STARTER.css; els.js.value = STARTER.js;
+    save(); render();
+  });
+
+  // --- Tabs ---
+  function selectTab(tab) {
+    tabs.forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute("aria-selected", on ? "true" : "false");
+      document.getElementById(t.dataset.target).hidden = !on;
+    });
+    document.getElementById(tab.dataset.target).focus();
+  }
+  tabs.forEach(function (tab, i) {
+    tab.addEventListener("click", function () { selectTab(tab); });
+    tab.addEventListener("keydown", function (e) {
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      e.preventDefault();
+      var next = (i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length;
+      tabs[next].focus(); selectTab(tabs[next]);
+    });
+  });
+
+  // --- Draggable split (desktop) ---
+  var gutter = document.getElementById("gutter");
+  var panes = document.getElementById("panes");
+  var editorPane = document.getElementById("paneEditor");
+  var dragging = false;
+  function setSplit(clientX) {
+    var rect = panes.getBoundingClientRect();
+    var pct = ((clientX - rect.left) / rect.width) * 100;
+    pct = Math.max(20, Math.min(80, pct));
+    editorPane.style.flex = "0 0 " + pct + "%";
+  }
+  gutter.addEventListener("pointerdown", function (e) {
+    dragging = true; gutter.classList.add("dragging");
+    gutter.setPointerCapture(e.pointerId);
+    document.body.style.userSelect = "none";
+  });
+  gutter.addEventListener("pointermove", function (e) { if (dragging) setSplit(e.clientX); });
+  gutter.addEventListener("pointerup", function (e) {
+    dragging = false; gutter.classList.remove("dragging");
+    try { gutter.releasePointerCapture(e.pointerId); } catch (err) {}
+    document.body.style.userSelect = "";
+  });
+  gutter.addEventListener("keydown", function (e) {
+    var cur = parseFloat(editorPane.style.flexBasis) || 50;
+    if (e.key === "ArrowLeft")  { editorPane.style.flex = "0 0 " + Math.max(20, cur - 4) + "%"; }
+    if (e.key === "ArrowRight") { editorPane.style.flex = "0 0 " + Math.min(80, cur + 4) + "%"; }
+  });
+
+  // --- Boot ---
+  load();
+  render();
+})();
+</script>
+</body>
+</html>
