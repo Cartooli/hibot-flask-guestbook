@@ -180,6 +180,10 @@
     <span class="hint">Paste HTML, CSS &amp; JavaScript — it renders in a safe sandbox.</span>
     <div class="spacer"></div>
     <label class="autorun"><input type="checkbox" id="autorun" checked /> Live update</label>
+    <button class="tbtn" id="pdf" type="button" title="Opens your browser's print dialog — choose 'Save as PDF' as the destination">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Save as PDF
+    </button>
     <button class="tbtn" id="share" type="button" title="Copy a link that contains this code">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
       Share
@@ -288,11 +292,23 @@
   function buildDoc() {
     return '<!DOCTYPE html><html><head><meta charset="utf-8">' +
       '<meta name="viewport" content="width=device-width, initial-scale=1">' +
+      "<title>Hi Bot Code — preview</title>" +
+      // Print defaults — placed before the user's <style> so user rules win.
+      // print-color-adjust keeps user backgrounds/colors in the saved PDF.
+      '<style id="hibot-print-defaults">@media print{' +
+        "html{-webkit-print-color-adjust:exact;print-color-adjust:exact;}" +
+        "@page{margin:12mm;}}</style>" +
       "<style>" + els.css.value + "</style></head><body>" +
       els.html.value +
       "<script>\ntry {\n" + els.js.value + "\n} catch (err) {\n" +
       "  document.body.insertAdjacentHTML('beforeend', '<pre style=\"color:#b00020;white-space:pre-wrap;font:13px/1.5 monospace;padding:8px;border-top:1px solid #eee\">' + String(err) + '</pre>');\n" +
-      "}\n<\/script></body></html>";
+      "}\n<\/script>" +
+      // Print bridge: the sandboxed iframe prints its own full document (correct
+      // pagination + exact CSS). Gated to hibot-print messages from the parent.
+      "<script>\nwindow.addEventListener('message', function (e) {\n" +
+      "  if (e.source !== window.parent) return;\n" +
+      "  if (e.data && e.data.type === 'hibot-print') { window.print(); }\n" +
+      "});\n<\/script></body></html>";
   }
   function render() {
     // srcdoc keeps output in a unique opaque origin; sandbox has no allow-same-origin,
@@ -331,6 +347,12 @@
   });
 
   document.getElementById("run").addEventListener("click", render);
+
+  // --- Save as PDF: ask the sandboxed preview to print itself (native PDF) ---
+  document.getElementById("pdf").addEventListener("click", function () {
+    if (!preview.contentWindow) return; // iframe not ready yet
+    preview.contentWindow.postMessage({ type: "hibot-print" }, "*");
+  });
 
   // --- Share: build a self-contained link and copy it to the clipboard ---
   var shareBtn = document.getElementById("share");
