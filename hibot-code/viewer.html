@@ -180,6 +180,10 @@
     <span class="hint">Paste HTML, CSS &amp; JavaScript — it renders in a safe sandbox.</span>
     <div class="spacer"></div>
     <label class="autorun"><input type="checkbox" id="autorun" checked /> Live update</label>
+    <button class="tbtn" id="share" type="button" title="Copy a link that contains this code">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+      Share
+    </button>
     <button class="tbtn" id="reset" type="button" title="Reset to starter code">Reset</button>
     <button class="tbtn primary" id="run" type="button" title="Run (Ctrl/Cmd + Enter)">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
@@ -237,11 +241,37 @@
   var autorun = document.getElementById("autorun");
   var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
 
+  // --- Unicode-safe base64 for share links (encodes to the URL fragment) ---
+  function encodeCode(obj) {
+    var bytes = new TextEncoder().encode(JSON.stringify(obj));
+    var bin = "";
+    bytes.forEach(function (b) { bin += String.fromCharCode(b); });
+    return btoa(bin);
+  }
+  function decodeCode(b64) {
+    var bin = atob(b64);
+    var bytes = Uint8Array.from(bin, function (c) { return c.charCodeAt(0); });
+    return JSON.parse(new TextDecoder().decode(bytes));
+  }
+  function fromShareLink() {
+    var m = /[#&]code=([^&]+)/.exec(location.hash);
+    if (!m) return null;
+    try {
+      var obj = decodeCode(decodeURIComponent(m[1]));
+      if (obj && typeof obj.html === "string") return obj;
+    } catch (e) { /* malformed link — fall through to other sources */ }
+    return null;
+  }
+
   // --- Persistence (local only; the user's own code, never sent anywhere) ---
   function load() {
+    var shared = fromShareLink();
+    if (shared) { applySrc(shared); return; }
     var saved = null;
     try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch (e) { saved = null; }
-    var src = (saved && typeof saved.html === "string") ? saved : STARTER;
+    applySrc((saved && typeof saved.html === "string") ? saved : STARTER);
+  }
+  function applySrc(src) {
     els.html.value = src.html || "";
     els.css.value  = src.css  || "";
     els.js.value   = src.js   || "";
@@ -274,6 +304,9 @@
   var timer = null;
   function scheduleRender() {
     save();
+    // Once the user edits, drop the share-link hash so a refresh restores their
+    // own (autosaved) edits rather than re-loading the original shared code.
+    if (/[#&]code=/.test(location.hash)) history.replaceState(null, "", location.pathname);
     if (!autorun.checked) return;
     if (timer) clearTimeout(timer);
     timer = setTimeout(render, 350);
@@ -298,8 +331,44 @@
   });
 
   document.getElementById("run").addEventListener("click", render);
+
+  // --- Share: build a self-contained link and copy it to the clipboard ---
+  var shareBtn = document.getElementById("share");
+  var shareLabel = shareBtn.lastChild; // the trailing text node ("Share")
+  var shareTimer = null;
+  function flashShare(text) {
+    shareLabel.textContent = " " + text;
+    if (shareTimer) clearTimeout(shareTimer);
+    shareTimer = setTimeout(function () { shareLabel.textContent = " Share"; }, 1800);
+  }
+  shareBtn.addEventListener("click", function () {
+    var payload = encodeURIComponent(encodeCode({
+      html: els.html.value, css: els.css.value, js: els.js.value
+    }));
+    var url = location.origin + location.pathname + "#code=" + payload;
+    history.replaceState(null, "", "#code=" + payload);
+    function fallbackCopy() {
+      var t = document.createElement("textarea");
+      t.value = url; t.setAttribute("readonly", "");
+      t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select();
+      var ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+      document.body.removeChild(t);
+      flashShare(ok ? "Link copied!" : "Copy failed");
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function () {
+        flashShare("Link copied!");
+      }, fallbackCopy);
+    } else {
+      fallbackCopy();
+    }
+  });
+
   document.getElementById("reset").addEventListener("click", function () {
     if (!confirm("Reset all three editors to the starter example?")) return;
+    if (location.hash) history.replaceState(null, "", location.pathname);
     els.html.value = STARTER.html; els.css.value = STARTER.css; els.js.value = STARTER.js;
     save(); render();
   });
