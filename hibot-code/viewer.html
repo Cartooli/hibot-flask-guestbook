@@ -180,6 +180,10 @@
     <span class="hint">Paste HTML, CSS &amp; JavaScript — it renders in a safe sandbox.</span>
     <div class="spacer"></div>
     <label class="autorun"><input type="checkbox" id="autorun" checked /> Live update</label>
+    <button class="tbtn" id="copy" type="button" title="Copy the code from the active tab">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copy
+    </button>
     <button class="tbtn" id="pdf" type="button" title="Opens your browser's print dialog — choose 'Save as PDF' as the destination">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
       Save as PDF
@@ -354,38 +358,54 @@
     preview.contentWindow.postMessage({ type: "hibot-print" }, "*");
   });
 
+  // --- Clipboard: async API with a hidden-textarea execCommand fallback ---
+  function copyText(text, onResult) {
+    function fallbackCopy() {
+      var t = document.createElement("textarea");
+      t.value = text; t.setAttribute("readonly", "");
+      t.style.position = "fixed"; t.style.opacity = "0";
+      document.body.appendChild(t); t.select();
+      var ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+      document.body.removeChild(t);
+      onResult(ok);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { onResult(true); }, fallbackCopy);
+    } else {
+      fallbackCopy();
+    }
+  }
+  // Briefly swap a button's trailing text label, then restore it.
+  function makeFlasher(btn, defaultLabel) {
+    var labelNode = btn.lastChild; // trailing text node
+    var t = null;
+    return function (text) {
+      labelNode.textContent = " " + text;
+      if (t) clearTimeout(t);
+      t = setTimeout(function () { labelNode.textContent = " " + defaultLabel; }, 1800);
+    };
+  }
+
+  // --- Copy: copy the active editor tab's code ---
+  var copyBtn = document.getElementById("copy");
+  var flashCopy = makeFlasher(copyBtn, "Copy");
+  copyBtn.addEventListener("click", function () {
+    var activeTab = document.querySelector('.tab[aria-selected="true"]');
+    var area = document.getElementById(activeTab.dataset.target);
+    copyText(area.value, function (ok) { flashCopy(ok ? "Copied!" : "Copy failed"); });
+  });
+
   // --- Share: build a self-contained link and copy it to the clipboard ---
   var shareBtn = document.getElementById("share");
-  var shareLabel = shareBtn.lastChild; // the trailing text node ("Share")
-  var shareTimer = null;
-  function flashShare(text) {
-    shareLabel.textContent = " " + text;
-    if (shareTimer) clearTimeout(shareTimer);
-    shareTimer = setTimeout(function () { shareLabel.textContent = " Share"; }, 1800);
-  }
+  var flashShare = makeFlasher(shareBtn, "Share");
   shareBtn.addEventListener("click", function () {
     var payload = encodeURIComponent(encodeCode({
       html: els.html.value, css: els.css.value, js: els.js.value
     }));
     var url = location.origin + location.pathname + "#code=" + payload;
     history.replaceState(null, "", "#code=" + payload);
-    function fallbackCopy() {
-      var t = document.createElement("textarea");
-      t.value = url; t.setAttribute("readonly", "");
-      t.style.position = "fixed"; t.style.opacity = "0";
-      document.body.appendChild(t); t.select();
-      var ok = false;
-      try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
-      document.body.removeChild(t);
-      flashShare(ok ? "Link copied!" : "Copy failed");
-    }
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(url).then(function () {
-        flashShare("Link copied!");
-      }, fallbackCopy);
-    } else {
-      fallbackCopy();
-    }
+    copyText(url, function (ok) { flashShare(ok ? "Link copied!" : "Copy failed"); });
   });
 
   document.getElementById("reset").addEventListener("click", function () {
