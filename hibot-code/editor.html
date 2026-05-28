@@ -44,7 +44,7 @@
 <link rel="preload" as="font" href="/assets/fonts/rP2Yp2ywxg089UriI5-g4vlH9VoD8Cmcqbu0-K6z9mXg.woff2" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/fonts/fonts.css">
   <link rel="stylesheet" href="/assets/hibot-theme.css">
- <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2.13.5" />
+ <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2.13.6" />
  
  <!-- PWA Support -->
  <link rel="manifest" href="manifest.json" />
@@ -53,7 +53,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
  <meta name="apple-mobile-web-app-title" content="Hi Bot Code" />
- <link rel="apple-touch-icon" href="favicon.svg?v=2.13.5" />
+ <link rel="apple-touch-icon" href="favicon.svg?v=2.13.6" />
  <!--
  Hi Bot Code v2.6.0
  - No libraries, no external requests, no tracking.
@@ -127,7 +127,7 @@ color-scheme:dark; /* FINDING-006: native browser UI renders in dark mode by def
  --surface-3: color-mix(in srgb, var(--accent) 8%, var(--bg));
 
  /* Typography + spacing rhythm (4px base) */
- --text-body: 17px;
+ --text-body: 16px;
  --text-ui-sm: 15px;
  --text-caption: 13px;
  --leading-body: 1.62;
@@ -139,6 +139,12 @@ color-scheme:dark; /* FINDING-006: native browser UI renders in dark mode by def
  --app-pad: clamp(12px, 1.75vw, 28px);
  --app-gap: clamp(12px, 1.35vw, 22px);
  --sidebar-cap: clamp(280px, 30vw, 420px);
+ --panel-2: #1B1F26;
+ --radius-sm: 8px;
+ --nav-h: 50px;
+ --accent-soft: rgba(245, 165, 36, 0.9);
+ --accent-dim: rgba(245, 165, 36, 0.14);
+ --border-hover: rgba(168, 181, 201, 0.45);
  }
  *{box-sizing:border-box}
  html,body{
@@ -438,6 +444,28 @@ color-scheme:dark; /* FINDING-006: native browser UI renders in dark mode by def
  margin-left: 8px;
  flex-shrink: 0;
  }
+ }
+
+ .preview-toolbar-group {
+ display: inline-flex;
+ align-items: center;
+ gap: 4px;
+ flex-shrink: 0;
+ }
+ .preview-toolbar-group + .preview-toolbar-group {
+ margin-left: 4px;
+ padding-left: 8px;
+ border-left: 1px solid var(--border);
+ }
+ @media (max-width: 1320px) {
+ .preview-toolbar-group + .preview-toolbar-group {
+ border-left: none;
+ padding-left: 0;
+ margin-left: 2px;
+ }
+ }
+ .preview-toolbar-group--meta {
+ margin-left: auto;
  }
 
  /* When preview is visible alongside sidebar, hide verbose text and compact buttons */
@@ -1929,27 +1957,32 @@ background:var(--bg) !important;
  }
  }
 
- /* Welcome Banner */
+ /* Welcome Banner — calm panel (aligned with viewer toolbar) */
  .welcome-banner{
- background:var(--accent);
- color: #0A0A0A; padding:16px 24px; margin:16px 16px 0 16px;
- border-radius:var(--radius); display:flex; align-items:center; gap:16px;
- box-shadow:var(--shadow);
- animation:slideDown 0.4s ease-out;
+ background:var(--surface-2);
+ color:var(--ink);
+ padding:14px 18px;
+ margin:12px var(--app-pad) 0;
+ border:1px solid var(--border);
+ border-radius:var(--radius);
+ display:flex; align-items:center; gap:16px;
+ box-shadow:0 4px 20px rgba(0,0,0,.22);
+ animation:slideDown 0.35s ease-out;
  }
  .welcome-banner.hidden{display:none}
- .welcome-content{flex:1}
- .welcome-content h1{margin:0 0 8px 0; font-size:clamp(1.125rem, 0.5rem + 1.5vw, 1.375rem); font-weight:700; font-family:var(--font-display); line-height:var(--leading-snug); letter-spacing:-0.02em}
- .welcome-content p{margin:0; font-size:15px; opacity:0.95; line-height:var(--leading-body)}
- .welcome-tease{margin-top:10px !important; font-size:13px; opacity:0.9}
- .welcome-tease a{color:rgba(255,255,255,1); font-weight:600; text-decoration:underline; text-underline-offset:3px; display:inline-flex; align-items:center; min-height:44px}
- .welcome-tease a:hover{color:rgba(255,255,255,1); text-decoration:none; background:rgba(255,255,255,0.2); padding:2px 4px; border-radius:4px}
- .welcome-content strong{font-weight:700; background:rgba(255,255,255,0.2); padding:2px 6px; border-radius:4px}
+ .welcome-content{flex:1; min-width:0}
+ .welcome-content h1{margin:0 0 6px 0; font-size:clamp(1.05rem, 0.45rem + 1.2vw, 1.3rem); font-weight:700; font-family:var(--font-display); line-height:var(--leading-snug); letter-spacing:-0.02em; color:var(--ink)}
+ .welcome-content p{margin:0; font-size:var(--text-ui-sm); color:var(--muted); line-height:var(--leading-body)}
+ .welcome-tease{margin-top:8px !important; font-size:var(--text-caption)}
+ .welcome-tease a{color:var(--accent); font-weight:600; text-decoration:underline; text-underline-offset:3px; display:inline; min-height:auto}
+ .welcome-tease a:hover{color:var(--accent-soft); text-decoration:none}
+ .welcome-content strong{font-weight:700; color:var(--accent); background:var(--accent-dim); padding:1px 6px; border-radius:4px}
  .welcome-banner .btn{
- background:rgba(255,255,255,0.25); border:2px solid rgba(255,255,255,0.4);
- font-weight:600; font-size:14px; padding:12px 20px;
+ background:var(--panel-2); border:1px solid var(--border);
+ color:var(--ink); font-weight:600; font-size:13px; padding:10px 16px;
+ flex-shrink:0;
  }
- .welcome-banner .btn:hover{background:rgba(255,255,255,0.4); transform:scale(1.02)}
+ .welcome-banner .btn:hover{background:rgba(168,181,201,.12); border-color:var(--border-hover); transform:none}
  @keyframes slideDown{from{opacity:0; transform:translateY(-20px)} to{opacity:1; transform:translateY(0)}}
  @keyframes gentlePulse{0%,100%{box-shadow:var(--shadow), 0 0 40px rgba(245,165,36,0.3)} 50%{box-shadow:var(--shadow), 0 0 50px rgba(245,165,36,0.4)}}
  @keyframes highlightPulse{0%,100%{box-shadow:0 0 0 3px transparent} 50%{box-shadow:0 0 0 3px var(--accent), 0 0 20px rgba(245,165,36,0.4)}}
@@ -2913,7 +2946,7 @@ transition: transform 0.2s ease, background 0.2s ease;
 }
 
 .group:hover {
-transform: translateX(2px);
+background: color-mix(in srgb, var(--accent) 4%, transparent);
  }
  
  .group h3 {
@@ -4089,133 +4122,64 @@ transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
  }
  /* ====== END v2.5.2 ====== */
 
- /* ====== Site Nav (shared across all pages) ====== */
- .site-top-nav {
- position: sticky;
- top: 0;
- z-index: var(--z-sticky);
- background: rgba(10,10,10,.94);
- -webkit-backdrop-filter: blur(16px);
- backdrop-filter: blur(16px);
- border-bottom: 1px solid var(--border);
- display: flex;
- align-items: center;
- gap: 0;
- padding: 0 max(16px, env(safe-area-inset-right, 0px)) 0 max(16px, env(safe-area-inset-left, 0px));
- padding-top: env(safe-area-inset-top, 0px);
- min-height: 46px;
- flex-shrink: 0;
+ /* Site nav: assets/hibot-theme.css */
+
+ /* Editor polish — readability & viewer-aligned chrome */
+ #autosaveStatus {
+ top: calc(var(--nav-h) + env(safe-area-inset-top, 0px) + 10px);
+ box-shadow: var(--shadow);
  }
- .site-top-nav .nav-logo {
- display: flex;
- align-items: center;
- gap: 7px;
- text-decoration: none;
- color: var(--accent);
- font-family: var(--font-display);
- font-weight: 800;
- font-size: 14px;
- letter-spacing: -0.01em;
- margin-right: 8px;
- padding: 0 4px;
- min-height: 44px;
- white-space: nowrap;
+ .card .bar {
+ min-height: 42px;
+ gap: 10px;
  }
- .site-top-nav .nav-logo:hover { text-decoration: underline; }
- .site-top-nav .nav-divider {
- width: 1px;
- height: 20px;
- background: var(--border);
- margin: 0 8px;
- }
- .site-top-nav .nav-links {
- display: flex;
- align-items: center;
- gap: 2px;
- flex: 1;
- }
- .site-top-nav .nav-links a {
- color: var(--muted);
- font-size: 13px;
- font-weight: 500;
- padding: 0 10px;
- min-height: 44px;
- display: inline-flex;
- align-items: center;
- border-radius: 6px;
- text-decoration: none;
- transition: color .15s, background .15s;
- white-space: nowrap;
- }
- .site-top-nav .nav-links a:hover { color: var(--ink); background: rgba(255,255,255,.06); }
- .site-top-nav .nav-links a[aria-current="page"] { color: var(--accent); }
- .site-top-nav .nav-cta {
- margin-left: auto;
+ .card .bar .muted {
  font-size: 12px;
- font-weight: 600;
- color: var(--accent);
- border: 1px solid rgba(245,165,36,.35);
- border-radius: 6px;
- padding: 0 11px;
- min-height: 44px;
- display: inline-flex;
- align-items: center;
- text-decoration: none;
- transition: background .15s;
+ max-width: 22rem;
+ overflow: hidden;
+ text-overflow: ellipsis;
  white-space: nowrap;
+ flex-shrink: 1;
+ min-width: 0;
  }
- .site-top-nav .nav-cta:hover { background: rgba(245,165,36,.1); text-decoration: none; }
- /* Sub-desktop: hamburger menu so links are not squished in one row */
- .site-top-nav .site-nav-toggle {
- display: none;
- align-items: center;
- justify-content: center;
- margin-left: auto;
- padding: 0 10px;
- min-width: 44px;
- min-height: 44px;
- border: 1px solid rgba(168,181,201,.35);
- border-radius: 8px;
- background: rgba(168,181,201,.08);
- color: var(--ink);
- cursor: pointer;
- flex-shrink: 0;
+ #sidePanel .bar .muted { display: none; }
+ #sidePanel .bar .chip { font-family: var(--font-display); font-weight: 700; color: var(--ink); border-color: rgba(245,165,36,.35); }
+ .panel.card { background: var(--surface-1); }
+ .panel .group h3 { font-size: 15px; letter-spacing: 0.01em; }
+ .mode-toggle {
+ background: var(--panel-2);
+ border: 1px solid var(--border);
+ border-radius: var(--radius-sm);
+ box-shadow: none;
+ padding: 4px;
+ gap: 4px;
  }
- .site-top-nav .site-nav-toggle:hover { background: rgba(168,181,201,.15); }
- .site-top-nav .site-nav-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
- @media (max-width: 1040px) {
- .site-top-nav { position: relative; flex-wrap: wrap; }
- .site-top-nav .nav-divider { display: none; }
- .site-top-nav .nav-links {
- display: none;
- position: absolute;
- top: 100%;
- left: 0;
- right: 0;
- flex-direction: column;
- align-items: stretch;
- gap: 0;
- flex: none;
- padding: 8px 0;
- margin: 0;
- background: rgba(10,10,10,.98);
- -webkit-backdrop-filter: blur(16px);
- backdrop-filter: blur(16px);
- border-bottom: 1px solid var(--border);
- box-shadow: 0 12px 24px rgba(0,0,0,.35);
- z-index: calc(var(--z-sticky) + 5);
+ .mode-toggle button {
+ border-radius: 6px;
+ border: 1px solid transparent;
+ background: transparent;
+ font-size: 12px;
+ padding: 8px 10px;
  }
- .site-top-nav.nav-open .nav-links { display: flex; }
- .site-top-nav .nav-links a {
- padding: 12px 20px;
- border-radius: 0;
- width: 100%;
- box-sizing: border-box;
+ .mode-toggle button.active {
+ box-shadow: none;
  }
- .site-top-nav .site-nav-toggle { display: inline-flex; }
- .site-top-nav .nav-cta { display: none; }
+ .step-indicator {
+ gap: 10px;
+ padding: 12px;
+ background: var(--panel-2);
  }
- a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+ .step-indicator .step {
+ align-items: flex-start;
+ padding: 10px;
+ border: 1px solid transparent;
+ }
+ .step-indicator .step.active {
+ border-color: rgba(245,165,36,.35);
+ }
+ .social-proof {
+ border: 1px solid var(--border);
+ }
  </style>
 </head>
 <body>
@@ -4235,6 +4199,7 @@ transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
  <div class="nav-divider" aria-hidden="true"></div>
  <div class="nav-links">
  <a href="editor.html" aria-current="page">Editor</a>
+ <a href="viewer.html">Viewer</a>
  <a href="/challenges/">Challenges</a>
  <a href="showcase.html">Showcase</a>
  <a href="ai-coding-landscape-2026.html">AI Guide</a>
@@ -4307,6 +4272,7 @@ transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
  <span class="chip">Your Website</span>
  <span class="muted beginner-hide">This shows what your HTML looks like.</span>
  <span class="spacer"></span>
+ <div class="preview-toolbar-group preview-toolbar-group--viewport" role="group" aria-label="Viewport size">
  <button class="btn small" id="btnMobile" data-tooltip="See how it looks on a phone" aria-label="Preview in mobile size">Mobile</button>
  <button class="btn small" id="btnTablet" data-tooltip="See how it looks on a tablet" aria-label="Preview in tablet size">Tablet</button>
  <button class="btn small" id="btnDesktop" data-tooltip="See how it looks on a computer" aria-label="Preview in desktop size">Desktop</button>
@@ -4332,9 +4298,9 @@ transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
  <option value="desktop-4k">Desktop 4K (2560×1440)</option>
  </optgroup>
  </select>
+ </div>
+ <div class="preview-toolbar-group preview-toolbar-group--display advanced-only" role="group" aria-label="Preview display">
  <button class="btn small device-frame-toggle advanced-only" id="btnToggleFrame" data-tooltip="Add a phone/tablet frame" aria-label="Toggle device frame">Frame</button>
- <button class="btn small" id="btnFullscreen" data-tooltip="Make preview fill the screen" aria-label="Enter fullscreen preview">Fullscreen</button>
- <button class="btn small" id="btnOpenPreview" title="Open preview in a new window (pop-out)" aria-label="Open preview in new window">Pop-out</button>
  <div class="preview-zoom-controls advanced-only" style="display:none;">
  <button class="btn small" id="btnZoomOut" data-tooltip="Zoom out" aria-label="Zoom out">-</button>
  <input type="range" id="zoomSlider" min="50" max="200" value="100" step="10" aria-label="Zoom level">
@@ -4342,9 +4308,15 @@ transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
  <button class="btn small" id="btnZoomIn" data-tooltip="Zoom in" aria-label="Zoom in">+</button>
  <button class="btn small" id="btnResetZoom" data-tooltip="Reset zoom" aria-label="Reset zoom to 100%">Reset</button>
  </div>
+ </div>
+ <div class="preview-toolbar-group preview-toolbar-group--actions" role="group" aria-label="Preview actions">
+ <button class="btn small" id="btnFullscreen" data-tooltip="Make preview fill the screen" aria-label="Enter fullscreen preview">Fullscreen</button>
+ <button class="btn small" id="btnOpenPreview" title="Open preview in a new window (pop-out)" aria-label="Open preview in new window">Pop-out</button>
+ <button class="btn small" id="btnOpenInViewer" data-tooltip="Open this project in the HTML Viewer (separate tabs for HTML, CSS, JS)" aria-label="Open current code in Viewer">Open in Viewer</button>
  <button class="btn small advanced-only" id="btnRefreshPreview" data-tooltip="Refresh preview" aria-label="Manually refresh preview" style="display:none;">Refresh</button>
  <button class="btn small advanced-only" id="btnScreenshot" data-tooltip="Take screenshot" aria-label="Capture preview as image" style="display:none;">Screenshot</button>
- <span class="chip" id="viewportDimensions" style="margin-left:auto; font-size:11px; display:none;">--</span>
+ </div>
+ <span class="chip preview-toolbar-group preview-toolbar-group--meta" id="viewportDimensions" style="font-size:11px; display:none;">--</span>
  </div>
  <iframe id="preview" title="Rendered HTML Preview" sandbox="allow-forms allow-popups allow-scripts"></iframe>
  </div>
@@ -4353,7 +4325,7 @@ transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
  <aside class="card panel" id="sidePanel" aria-label="Controls panel">
  <div class="bar">
  <span class="chip">Edit Panel</span>
- <span class="muted">Change content + styles here → updates the code below.</span>
+ <span class="muted" title="Edits here update the HTML in the code panel below">Edits update the code below</span>
  <span class="spacer"></span>
  <button class="btn small" id="btnHelp" data-tooltip="Keyboard shortcuts and help" aria-label="Show help and keyboard shortcuts">?</button>
  <button class="btn small" id="btnSettings" data-tooltip="Open Settings" aria-label="Open settings and preferences"><span class="btn-label">Settings</span></button>
@@ -5070,6 +5042,7 @@ transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
  </section>
  </main>
 
+ <script src="/assets/hibot-share.js"></script>
  <script src="codemirror-bundle.js"></script>
  <script src="cli-reference-data.js"></script>
  <script>
@@ -7970,6 +7943,57 @@ background:rgba(245,165,36,0.08); border:1px solid rgba(245,165,36,0.2); border-
  if (activeEditorTab !== 'full') parseHTMLIntoTabs();
  }
 
+ function extractViewerPayloadFromHtml(src) {
+ var styleMatch = src.match(/<style[^>]*>([\s\S]*?)<\/style>/i);
+ var scriptMatches = [...src.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi)];
+ var jsContent = scriptMatches.length > 0 ? scriptMatches[scriptMatches.length - 1][1] : '';
+ var bodyMatch = src.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+ var bodyContent = bodyMatch ? bodyMatch[1] : src;
+ bodyContent = bodyContent.replace(/<script(?![^>]*\bsrc=)[^>]*>[\s\S]*?<\/script>/gi, '').trim();
+ return {
+ html: bodyContent,
+ css: styleMatch ? styleMatch[1].trim() : '',
+ js: jsContent.trim()
+ };
+ }
+
+ function getViewerPayloadFromEditor() {
+ if (activeEditorTab !== 'full') {
+ return {
+ html: htmlTA ? htmlTA.value : '',
+ css: cssTA ? cssTA.value : '',
+ js: jsTA ? jsTA.value : ''
+ };
+ }
+ return extractViewerPayloadFromHtml(getCode());
+ }
+
+ function openInViewer() {
+ if (typeof hibotShare === 'undefined' || !hibotShare.buildViewerUrl) {
+ showToast('Viewer handoff is unavailable — refresh the page.', 'error');
+ return;
+ }
+ var payload = getViewerPayloadFromEditor();
+ var hasContent = String(payload.html || '').trim() || String(payload.css || '').trim() || String(payload.js || '').trim();
+ if (!hasContent) {
+ showToast('Add some code before opening Viewer.', 'warning');
+ return;
+ }
+ var viewerUrl = hibotShare.buildViewerUrl('viewer.html', payload);
+ if (viewerUrl.length > 180000) {
+ showToast('Project is too large to open in Viewer via link. Use Share or Download instead.', 'error', 6000);
+ return;
+ }
+ var w = window.open(viewerUrl, '_blank', 'noopener,noreferrer');
+ if (!w) {
+ navigator.clipboard.writeText(viewerUrl).then(function () {
+ showToast('Popup blocked — Viewer link copied to clipboard.', 'info', 5000);
+ }).catch(function () {
+ showToast('Popup blocked — allow popups or copy from the address bar after navigating to Viewer.', 'warning', 6000);
+ });
+ }
+ }
+
  // ── FORMAT CODE ──────────────────────────────────────────────────────────
  // Pure-JS indentation formatter: no external dependencies.
  // Works on the active pane's content. For the "full" tab it formats HTML
@@ -8797,6 +8821,11 @@ background:rgba(245,165,36,0.08); border:1px solid rgba(245,165,36,0.2); border-
  btnToggleSidebar.textContent = hidden ? "Show" : "Hide";
  btnToggleSidebar.setAttribute("aria-expanded", String(!hidden));
  });
+
+ const btnOpenInViewer = el("btnOpenInViewer");
+ if (btnOpenInViewer) {
+ safeAddEventListener(btnOpenInViewer, "click", openInViewer);
+ }
 
  safeAddEventListener(btnOpenPreview, "click", ()=>{
  const w = window.open("", "_blank");

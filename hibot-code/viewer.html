@@ -20,7 +20,7 @@
   <link rel="canonical" href="https://code.hibot.space/viewer.html" />
   <link rel="stylesheet" href="/assets/fonts/fonts.css">
   <link rel="stylesheet" href="/assets/hibot-theme.css">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2.13.5" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2.13.6" />
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#0A0A0A" />
   <meta name="color-scheme" content="dark" />
@@ -49,17 +49,7 @@
       overflow: hidden;
     }
 
-    /* Nav (matches site convention) */
-    .site-nav { position: sticky; top: 0; z-index: 100; background: rgba(10,10,10,.94); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 20px; height: var(--nav-h); flex: 0 0 auto; }
-    .site-nav a.home-link { display: flex; align-items: center; gap: 7px; text-decoration: none; color: var(--accent); font-family: var(--font-display); font-weight: 800; font-size: 14px; white-space: nowrap; margin-right: 4px; min-height: 44px; }
-    .site-nav a.home-link:hover { text-decoration: underline; }
-    .nav-divider { width: 1px; height: 18px; background: var(--border); margin: 0 10px; flex-shrink: 0; }
-    .nav-links { display: flex; align-items: center; gap: 2px; flex: 1; overflow-x: auto; }
-    .nav-links > a { color: var(--muted); font-size: 13px; font-weight: 500; padding: 12px 16px; min-height: 44px; display: inline-flex; align-items: center; border-radius: 6px; text-decoration: none; transition: color .15s, background .15s; white-space: nowrap; }
-    .nav-links > a:hover { color: var(--ink); background: rgba(255,255,255,.06); }
-    .nav-links > a[aria-current="page"] { color: var(--accent); }
-    .nav-cta { margin-left: auto; background: var(--accent); color: var(--bg) !important; font-size: 13px; font-weight: 700; padding: 0 14px; min-height: 44px; display: inline-flex; align-items: center; border-radius: 6px; text-decoration: none; white-space: nowrap; transition: background .15s; }
-    .nav-cta:hover { background: #e19412; }
+    /* Site nav: assets/hibot-theme.css */
 
     /* App shell */
     .studio { flex: 1 1 auto; display: flex; flex-direction: column; min-height: 0; }
@@ -145,10 +135,6 @@
       .toolbar .hint { display: none; }
     }
 
-    @media (max-width: 640px) {
-      .nav-links { display: none; }
-    }
-
     a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0.01ms !important; } }
     @media (prefers-contrast: more), (prefers-contrast: high) {
@@ -164,13 +150,14 @@
     Hi Bot Code
   </a>
   <div class="nav-divider" aria-hidden="true"></div>
-  <div class="nav-links">
+  <div class="nav-links" id="viewerNavLinks">
     <a href="editor.html">Editor</a>
     <a href="viewer.html" aria-current="page">Viewer</a>
     <a href="/challenges/">Challenges</a>
     <a href="showcase.html">Showcase</a>
     <a href="learn.html">Learn</a>
   </div>
+  <button type="button" class="site-nav-toggle" aria-label="Open site menu" aria-expanded="false" id="viewerNavToggle" aria-controls="viewerNavLinks" onclick="this.setAttribute('aria-expanded',this.getAttribute('aria-expanded')==='false'?'true':'false');this.closest('.site-nav').classList.toggle('nav-open')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
   <a href="editor.html" class="nav-cta">Open full Editor →</a>
 </nav>
 
@@ -229,9 +216,26 @@
   </div>
 </div>
 
+<script src="/assets/hibot-share.js"></script>
 <script>
 (function () {
   "use strict";
+
+  var encodeCode = window.hibotShare && window.hibotShare.encodeCode;
+  var decodeCode = window.hibotShare && window.hibotShare.decodeCode;
+  if (!encodeCode || !decodeCode) {
+    encodeCode = function (obj) {
+      var bytes = new TextEncoder().encode(JSON.stringify(obj));
+      var bin = "";
+      bytes.forEach(function (b) { bin += String.fromCharCode(b); });
+      return btoa(bin);
+    };
+    decodeCode = function (b64) {
+      var bin = atob(b64);
+      var bytes = Uint8Array.from(bin, function (c) { return c.charCodeAt(0); });
+      return JSON.parse(new TextDecoder().decode(bytes));
+    };
+  }
 
   var STORAGE_KEY = "hibot-viewer-v1";
   var STARTER = {
@@ -249,18 +253,6 @@
   var autorun = document.getElementById("autorun");
   var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
 
-  // --- Unicode-safe base64 for share links (encodes to the URL fragment) ---
-  function encodeCode(obj) {
-    var bytes = new TextEncoder().encode(JSON.stringify(obj));
-    var bin = "";
-    bytes.forEach(function (b) { bin += String.fromCharCode(b); });
-    return btoa(bin);
-  }
-  function decodeCode(b64) {
-    var bin = atob(b64);
-    var bytes = Uint8Array.from(bin, function (c) { return c.charCodeAt(0); });
-    return JSON.parse(new TextDecoder().decode(bytes));
-  }
   function fromShareLink() {
     var m = /[#&]code=([^&]+)/.exec(location.hash);
     if (!m) return null;

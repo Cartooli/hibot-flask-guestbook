@@ -11,6 +11,12 @@ Canonical version lives in [`VERSION`](VERSION); the service worker
 - **PWA:** `VERSION` and `sw.js` `CACHE_NAME` bumped to `2.13.3` / `bws-v2.13.3`; `/ai-build-stack.html` added to `CORE_ASSETS`.
 - **Editor:** **Import HTML** — side-panel button opens a modal to paste a full document or choose a `.html` / `.htm` file (Tryit-style workflow). Respects the same size guard as share links (~400 KB). Asks before replacing unsaved edits vs the session baseline. Initial load now `await`s shared URL decode so hash shares apply before the default template runs.
 
+## Version 2.13.6 — Editor preview toolbar & Viewer handoff (May 2026)
+
+- **Editor:** Preview toolbar grouped (viewport / display / actions); **Open in Viewer** sends HTML/CSS/JS to `viewer.html` via shared `#code=` encoding (`assets/hibot-share.js`), with empty-project and oversized-URL guards.
+- **Viewer / theme:** Site nav styles consolidated in `assets/hibot-theme.css` (hamburger menu ≤1040px on viewer, matching editor); viewer uses shared share-link codec with fallback.
+- **PWA:** `VERSION` and `sw.js` `CACHE_NAME` bumped to `2.13.6` / `bws-v2.13.6`; `viewer.html` and `hibot-share.js` added to precache.
+
 ## Version 2.13.5 — Brand chrome, default OG, editor typography (May 2026)
 
 - **Brand / favicon:** `favicon.svg` uses canonical near-black `#0A0A0A`, amber hairline frame, and monospace `</>` mark with amber gradient — aligned with `DESIGN-TOKENS.md`.

@@ -5,16 +5,18 @@
    CACHE_NAME must match the `VERSION` file at the repo root. Bump both
    together on every release so clients evict the old cache on activate.
 */
-const CACHE_NAME = 'bws-v2.13.5';
+const CACHE_NAME = 'bws-v2.13.6';
 const CORE_ASSETS = [
   '/',
   '/index.html',
   '/editor.html',
+  '/viewer.html',
   '/codemirror-bundle.js',
   '/cli-reference-data.js',
   '/manifest.json',
   '/favicon.svg',
   '/assets/hibot-theme.css',
+  '/assets/hibot-share.js',
   '/404.html',
   '/showcase.html',
   '/sw.js',
