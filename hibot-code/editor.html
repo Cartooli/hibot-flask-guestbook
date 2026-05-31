@@ -12863,12 +12863,24 @@ transition: background 0.2s, color 0.2s, transform 0.2s;
 
  // Template Cards (for beginners)
  document.querySelectorAll('.template-card').forEach(card => {
- card.addEventListener('click', () => {
+ // Make the card keyboard-operable: it acts as a button.
+ card.setAttribute('role', 'button');
+ card.setAttribute('tabindex', '0');
+ const name = card.querySelector('h5')?.textContent?.trim();
+ if (name) card.setAttribute('aria-label', `Use ${name} template`);
+ const activate = () => {
  const template = card.dataset.template;
  if (template) {
  templateSelect.value = template;
  templateSelect.dispatchEvent(new Event('change'));
  showToast(`Selected ${card.querySelector('h5').textContent}!`, "success");
+ }
+ };
+ card.addEventListener('click', activate);
+ card.addEventListener('keydown', (e) => {
+ if (e.key === 'Enter' || e.key === ' ') {
+ e.preventDefault();
+ activate();
  }
  });
  });
