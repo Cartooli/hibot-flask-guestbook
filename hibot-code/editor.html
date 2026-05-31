@@ -720,7 +720,8 @@ transition:background .2s ease, color .2s ease, border-color .2s ease;
  content:"▼"; font-size:10px; opacity:.6;
  transition:transform .2s ease;
  }
- .group.collapsed h3::after{transform:rotate(-90deg)}
+ .group.collapsed h3::after,
+ .group.auto-collapsed h3::after{transform:rotate(-90deg)}
  
  /* Advanced Mode Hiding */
  body[data-mode="beginner"] .advanced-only{display:none !important}
@@ -3206,31 +3207,13 @@ transform: translateY(-1px);
  
  /* ====== PHASE 3 ENHANCEMENTS: Progressive Disclosure & Code Editor ====== */
  
- /* Progressive Disclosure - Collapsible Groups */
+ /* Progressive Disclosure - Collapsible Groups.
+    The chevron and its rotate-on-collapse live with the base .group h3 rules
+    (flex-centered); only the auto-collapsed content-hide is defined here. */
  .group.auto-collapsed .group-content {
  display: none;
  }
- 
- .group h3 {
- position: relative;
- padding-right: 30px;
- }
- 
- .group h3::after {
- content: "▼";
- position: absolute;
- right: 8px;
- top: 50%;
- transform: translateY(-50%);
- font-size: 10px;
- opacity: 0.6;
- transition: transform 0.2s ease;
- }
- 
- .group.auto-collapsed h3::after {
- transform: translateY(-50%) rotate(-90deg);
- }
- 
+
  /* Show More Button */
  .show-more-features {
  display: flex;
