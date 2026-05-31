@@ -15203,7 +15203,14 @@ Learn more: https://docs.softr.io/blocks/custom-code
  if(group.classList.contains("advanced-only") && document.body.getAttribute('data-mode') === 'beginner'){
  return; // Don't allow collapsing in beginner mode
  }
- group.classList.toggle("collapsed");
+ // Both .collapsed (manual) and .auto-collapsed (progressive disclosure)
+ // hide the group. Treat either as "collapsed" so a single click always
+ // expands, then collapse manually with .collapsed. Single source of truth.
+ if(group.classList.contains("collapsed") || group.classList.contains("auto-collapsed")){
+ group.classList.remove("collapsed", "auto-collapsed");
+ } else {
+ group.classList.add("collapsed");
+ }
  });
 
  // Keyboard support: these headers are collapse toggles, so expose them as
@@ -18423,20 +18430,10 @@ padding: ${padding}px;`;
  addShowMoreButton();
  }
  
- // Make all group headers clickable for collapse/expand
- document.querySelectorAll('.group h3').forEach(h3 => {
- h3.style.cursor = 'pointer';
- h3.addEventListener('click', () => {
- const group = h3.closest('.group');
- if (group) {
- group.classList.toggle('auto-collapsed');
- // Save preference
- const groupId = Array.from(document.querySelectorAll('.group')).indexOf(group);
- const collapsed = group.classList.contains('auto-collapsed');
- localStorage.setItem(`group_${groupId}_collapsed`, collapsed);
- }
- });
- });
+ // Group headers are made collapsible by the single "Collapsible groups"
+ // click handler (toggles .collapsed / clears .auto-collapsed). No second
+ // handler here — a duplicate toggle desynced the two classes and could
+ // leave auto-collapsed groups impossible to expand.
  }
  
  function addShowMoreButton() {
