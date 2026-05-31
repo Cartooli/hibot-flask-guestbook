@@ -15194,6 +15194,23 @@ Learn more: https://docs.softr.io/blocks/custom-code
  }
  group.classList.toggle("collapsed");
  });
+
+ // Keyboard support: these headers are collapse toggles, so expose them as
+ // buttons and activate on Enter/Space via a synthetic click (keeps behavior
+ // identical to mouse, including any other click listeners on the header).
+ const group = h3.closest(".group");
+ h3.setAttribute("role", "button");
+ h3.setAttribute("tabindex", "0");
+ const syncExpanded = () => h3.setAttribute("aria-expanded",
+ String(!(group?.classList.contains("collapsed") || group?.classList.contains("auto-collapsed"))));
+ syncExpanded();
+ h3.addEventListener("click", syncExpanded);
+ h3.addEventListener("keydown", (e) => {
+ if (e.key === "Enter" || e.key === " ") {
+ e.preventDefault();
+ h3.click();
+ }
+ });
  });
 
  // Step tracking for beginners
