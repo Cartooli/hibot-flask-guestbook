@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <title>HTML Viewer — paste HTML, CSS &amp; JS, see it run | Hi Bot Code</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="description" content="A clean, fast HTML viewer from Hi, Bot. Paste HTML, CSS, and JavaScript and see it render live in a safe sandbox — download as HTML, save as PDF, no account." />
+  <meta name="description" content="A clean, fast HTML viewer from Hi, Bot. Paste HTML, CSS, and JavaScript and see it render live in a safe sandbox — optional ~24h short link (when hosted), download as HTML, save as PDF, no account." />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
@@ -20,7 +20,7 @@
   <link rel="canonical" href="https://code.hibot.space/viewer.html" />
   <link rel="stylesheet" href="/assets/fonts/fonts.css">
   <link rel="stylesheet" href="/assets/hibot-theme.css">
-  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2.13.7" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg?v=2.13.8" />
   <link rel="manifest" href="manifest.json" />
   <meta name="theme-color" content="#0A0A0A" />
   <meta name="color-scheme" content="dark" />
@@ -76,6 +76,15 @@
     .tbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
     .autorun { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font-size: 12px; font-weight: 500; cursor: pointer; user-select: none; }
     .autorun input { accent-color: var(--accent); width: 15px; height: 15px; cursor: pointer; }
+
+    .hosted-share-banner {
+      flex: 0 0 auto;
+      padding: 10px 16px; font-size: 13px; line-height: 1.45;
+      background: rgba(245, 165, 36, 0.12); color: var(--ink);
+      border-bottom: 1px solid var(--border);
+    }
+    .hosted-share-banner[hidden] { display: none; }
+    .hosted-share-banner a { color: var(--accent); }
 
     /* Split panes */
     .panes { flex: 1 1 auto; display: flex; min-height: 0; }
@@ -179,6 +188,10 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       Download HTML
     </button>
+    <button class="tbtn" id="short-share" type="button" title="Create a short link (~24h) — needs server + Redis on this deployment. Use Share for a permanent URL in the address bar.">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+      Short link (24h)
+    </button>
     <button class="tbtn" id="share" type="button" title="Copy a link that contains this code">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
       Share
@@ -189,6 +202,8 @@
       Run
     </button>
   </div>
+
+  <div class="hosted-share-banner" id="hosted-share-banner" role="status" aria-live="polite" hidden></div>
 
   <div class="panes" id="panes">
     <section class="pane pane-editor" id="paneEditor" aria-label="Code editors">
@@ -268,12 +283,65 @@
   }
 
   // --- Persistence (local only; the user's own code, never sent anywhere) ---
-  function load() {
+  function loadFromStoredOrStarter() {
     var shared = fromShareLink();
     if (shared) { applySrc(shared); return; }
     var saved = null;
     try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch (e) { saved = null; }
     applySrc((saved && typeof saved.html === "string") ? saved : STARTER);
+  }
+
+  function showHostedBanner(kind) {
+    var el = document.getElementById("hosted-share-banner");
+    if (!el) return;
+    var msg;
+    if (kind === "expired") {
+      msg = "This short link has expired or was removed (links last about 24 hours). Use <strong>Share</strong> for a full link in the URL, or <strong>Download HTML</strong> to attach a file.";
+    } else if (kind === "unconfigured") {
+      msg = "Short links are not enabled on this copy of the site yet. Use <strong>Share</strong> or <strong>Download HTML</strong> instead.";
+    } else if (kind === "invalid") {
+      msg = "This short link returned unexpected data. Use <strong>Share</strong> or <strong>Download HTML</strong> instead.";
+    } else if (kind === "network") {
+      msg = "Could not load this short link (network error). Try <a href=\"viewer.html\">viewer.html</a> or paste your code.";
+    } else {
+      msg = "This short link could not be loaded. Use <strong>Share</strong> or <strong>Download HTML</strong>, or <a href=\"viewer.html\">start fresh</a>.";
+    }
+    el.innerHTML = msg;
+    el.removeAttribute("hidden");
+  }
+
+  function boot() {
+    var params = new URLSearchParams(window.location.search);
+    var sid = (params.get("share") || "").trim().toLowerCase();
+    if (sid && /^[a-f0-9]{32}$/.test(sid)) {
+      fetch("/api/viewer-share?share=" + encodeURIComponent(sid), { credentials: "same-origin" })
+        .then(function (r) {
+          if (r.ok) return r.json();
+          var err = new Error("bad_status");
+          err.status = r.status;
+          return Promise.reject(err);
+        })
+        .then(function (data) {
+          if (data && typeof data.html === "string") {
+            applySrc(data);
+            render();
+            return;
+          }
+          throw Object.assign(new Error("bad_shape"), { status: 0 });
+        })
+        .catch(function (err) {
+          var status = err && err.status;
+          if (status === 404) showHostedBanner("expired");
+          else if (status === 503) showHostedBanner("unconfigured");
+          else if (status === 0) showHostedBanner("invalid");
+          else showHostedBanner("network");
+          loadFromStoredOrStarter();
+          render();
+        });
+      return;
+    }
+    loadFromStoredOrStarter();
+    render();
   }
   function applySrc(src) {
     els.html.value = src.html || "";
@@ -320,9 +388,22 @@
   var timer = null;
   function scheduleRender() {
     save();
-    // Once the user edits, drop the share-link hash so a refresh restores their
+    // Once the user edits, drop #code= and ?share= so a refresh restores their
     // own (autosaved) edits rather than re-loading the original shared code.
-    if (/[#&]code=/.test(location.hash)) history.replaceState(null, "", location.pathname);
+    var stripHash = /[#&]code=/.test(location.hash);
+    try {
+      var u = new URL(location.href);
+      var hadShare = u.searchParams.has("share");
+      u.searchParams.delete("share");
+      var newSearch = u.searchParams.toString() ? "?" + u.searchParams.toString() : "";
+      if (stripHash) {
+        history.replaceState(null, "", u.pathname);
+      } else if (hadShare) {
+        history.replaceState(null, "", u.pathname + newSearch + u.hash);
+      }
+    } catch (e) {
+      if (stripHash) history.replaceState(null, "", location.pathname);
+    }
     if (!autorun.checked) return;
     if (timer) clearTimeout(timer);
     timer = setTimeout(render, 350);
@@ -418,13 +499,43 @@
       html: els.html.value, css: els.css.value, js: els.js.value
     }));
     var url = location.origin + location.pathname + "#code=" + payload;
-    history.replaceState(null, "", "#code=" + payload);
+    history.replaceState(null, "", location.pathname + "#code=" + payload);
     copyText(url, function (ok) { flashShare(ok ? "Link copied!" : "Copy failed"); });
+  });
+
+  // --- Short link (24h): POST to serverless + Redis (Vercel + Upstash when configured) ---
+  var shortShareBtn = document.getElementById("short-share");
+  var flashShort = makeFlasher(shortShareBtn, "Short link (24h)");
+  shortShareBtn.addEventListener("click", function () {
+    fetch("/api/viewer-share", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ html: els.html.value, css: els.css.value, js: els.js.value }),
+      credentials: "same-origin"
+    })
+      .then(function (r) {
+        return r.json().then(function (j) { return { r: r, j: j }; });
+      })
+      .then(function (ref) {
+        var r = ref.r;
+        var j = ref.j;
+        if (r.status === 200 && j && j.url) {
+          copyText(j.url, function (ok) { flashShort(ok ? "Copied!" : "Copy failed"); });
+          return;
+        }
+        if (r.status === 429) { flashShort("Rate limited"); return; }
+        if (r.status === 413) { flashShort("Too large"); return; }
+        if (r.status === 503) { flashShort("Unavailable"); return; }
+        flashShort((j && j.message) ? "Failed" : "Failed");
+      })
+      .catch(function () {
+        flashShort("Failed");
+      });
   });
 
   document.getElementById("reset").addEventListener("click", function () {
     if (!confirm("Reset all three editors to the starter example?")) return;
-    if (location.hash) history.replaceState(null, "", location.pathname);
+    history.replaceState(null, "", location.pathname);
     els.html.value = STARTER.html; els.css.value = STARTER.css; els.js.value = STARTER.js;
     save(); render();
   });
@@ -476,9 +587,8 @@
     if (e.key === "ArrowRight") { editorPane.style.flex = "0 0 " + Math.min(80, cur + 4) + "%"; }
   });
 
-  // --- Boot ---
-  load();
-  render();
+  // --- Boot (hosted ?share= id runs before hash / localStorage) ---
+  boot();
 })();
 </script>
 </body>

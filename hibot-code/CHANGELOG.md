@@ -3,6 +3,12 @@
 Canonical version lives in [`VERSION`](VERSION); the service worker
 (`sw.js`) cache key must match it on every release.
 
+## Version 2.13.8 — Viewer short links (24h) (June 2026)
+
+- **Viewer:** **Short link (24h)** toolbar button — `POST /api/viewer-share` stores HTML/CSS/JS in Upstash Redis (~24h TTL, ~400 KB cap, rate limit). **`?share=<id>`** loads that snapshot before hash / localStorage; banner on missing link, expiry, or missing server config (e.g. static-only hosts). Editing strips `?share=` like `#code=`. **Share** now `replaceState`s to `pathname#code=` so query params do not linger.
+- **API:** `api/viewer-share.js` (Vercel serverless) — `@upstash/redis` + `@upstash/ratelimit`; requires `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` on the deployment that runs functions.
+- **PWA:** `VERSION` / `sw.js` `CACHE_NAME` → `2.13.8` / `bws-v2.13.8`; favicon cache-bust on `viewer.html` + `editor.html`.
+
 ## Version 2.13.7 — Viewer download HTML (June 2026)
 
 - **Viewer:** **Download HTML** toolbar button saves `hibot-preview.html` — same assembled document as the live sandbox preview (`buildDoc()`), for email or attachment handoff. Meta description updated (download + PDF; still no account).
