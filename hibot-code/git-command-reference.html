@@ -1,0 +1,2245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="/assets/fonts/fonts.css">
+  <link rel="stylesheet" href="/assets/hibot-theme.css">
+
+  <title>Git Command Reference &amp; Cheat Sheet — Commands, Workflows &amp; Plain-English Guide | code.hibot.space</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="Git commands cheat sheet with plain-English explanations for beginners. Copy-paste reference for status, commit, branch, merge, push, pull, undo, and daily workflows." />
+  <meta name="keywords" content="git cheat sheet, git commands, git for beginners, git reference, git workflow, git clone, git commit, git branch, git merge, git rebase, git pull, git push" />
+  <meta name="author" content="code.hibot.space" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://code.hibot.space/git-command-reference.html" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://code.hibot.space/git-command-reference.html" />
+  <meta property="og:title" content="Git Command Reference &amp; Cheat Sheet" />
+  <meta property="og:description" content="Everyday Git commands with plain-English explanations. Copy, search, and learn — free reference for new developers." />
+  <meta property="og:image" content="https://code.hibot.space/get-started-coding-og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Git Command Reference &amp; Cheat Sheet" />
+  <meta name="twitter:description" content="Git commands with plain-English explanations. Searchable cheat sheet for beginners and daily use." />
+  <meta name="twitter:image" content="https://code.hibot.space/get-started-coding-og.png" />
+
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Git Command Reference & Cheat Sheet",
+    "description": "Searchable Git command reference with plain-English explanations, workflows, and safety notes for beginners.",
+    "url": "https://code.hibot.space/git-command-reference.html",
+    "author": { "@type": "Organization", "name": "code.hibot.space" },
+    "about": { "@type": "Thing", "name": "Git" },
+    "isAccessibleForFree": true
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type": "Question", "name": "What does git status do?", "acceptedAnswer": {"@type": "Answer", "text": "It shows which branch you are on, which files changed, and what is staged for the next commit."}},
+      {"@type": "Question", "name": "What does git pull do?", "acceptedAnswer": {"@type": "Answer", "text": "It downloads new commits from the remote and merges them into your current branch."}},
+      {"@type": "Question", "name": "What is the difference between git merge and git rebase?", "acceptedAnswer": {"@type": "Answer", "text": "Merge combines branches with a merge commit. Rebase replays your commits on top of another branch for linear history but rewrites commits."}},
+      {"@type": "Question", "name": "How do I undo a commit safely after pushing?", "acceptedAnswer": {"@type": "Answer", "text": "Use git revert <commit-hash> to create a new commit that undoes the change, then push."}},
+      {"@type": "Question", "name": "What does git stash do?", "acceptedAnswer": {"@type": "Answer", "text": "It temporarily shelves uncommitted work so you can switch branches with a clean working tree."}}
+    ]
+  }
+  </script>
+  <style>
+    :root {
+      --bg: #0A0A0A; --ink: #E8E8E3; --muted: #8B95A1; --accent: #F5A524;
+      --accent-dim: rgba(245,165,36,.14); --panel: #111418; --panel-2: #1B1F26;
+      --border: rgba(139,149,161,.22); --border-hover: rgba(139,149,161,.45);
+      --radius: 14px; --radius-sm: 8px; --shadow: 0 8px 30px rgba(0,0,0,.35);
+      --font-ui: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+      --good: #22c55e; --bad: #ef4444;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-ui); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    .site-nav { position: sticky; top: 0; z-index: 100; background: rgba(10,10,10,.94); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 20px; height: 50px; }
+    .site-nav a.home-link { display: flex; align-items: center; gap: 7px; text-decoration: none; color: var(--accent); font-weight: 800; font-size: 14px; white-space: nowrap; margin-right: 4px; }
+    .nav-divider { width: 1px; height: 18px; background: var(--border); margin: 0 10px; }
+    .nav-links { display: flex; align-items: center; gap: 2px; }
+    .nav-links a { color: var(--muted); font-size: 13px; font-weight: 500; padding: 5px 10px; border-radius: 6px; text-decoration: none; transition: color .15s, background .15s; white-space: nowrap; }
+    .nav-links a:hover { color: var(--ink); background: rgba(255,255,255,.06); }
+    .nav-links a[aria-current="page"] { color: var(--accent); }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 28px 18px 60px; }
+    .page-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin: 12px 0 18px; flex-wrap: wrap; }
+    .kicker { display: inline-flex; align-items: center; gap: 10px; color: var(--muted); letter-spacing: .12em; text-transform: uppercase; font-size: 12px; }
+    .dot { width: 10px; height: 10px; border-radius: 999px; background: linear-gradient(135deg, var(--accent), #f59e0b); box-shadow: 0 0 0 4px rgba(245,165,36,.1); }
+    .page-header h1 { margin: 0; font-size: clamp(28px, 4vw, 42px); line-height: 1.08; letter-spacing: -0.02em; }
+    .sub { margin: 0; max-width: 72ch; color: var(--muted); font-size: 15.5px; }
+    .top-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn { appearance: none; border: 1px solid var(--border); background: rgba(255,255,255,.04); color: var(--ink); padding: 10px 12px; border-radius: 999px; cursor: pointer; font-weight: 600; font-size: 13px; display: inline-flex; align-items: center; gap: 8px; transition: background .15s, border-color .15s; }
+    .btn:hover { background: rgba(255,255,255,.07); border-color: var(--border-hover); }
+    .btn.primary { border-color: rgba(245,165,36,.35); background: var(--accent-dim); }
+    .grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 14px; }
+    @media (max-width: 980px) { .grid { grid-template-columns: 1fr; } }
+    .card { background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03)); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+    .card .hd { padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: rgba(0,0,0,.12); gap: 12px; }
+    .card .hd h2 { margin: 0; font-size: 14px; display: flex; align-items: center; gap: 10px; }
+    .card .bd { padding: 16px; }
+    .pill { font-size: 12px; color: var(--muted); border: 1px solid var(--border); background: rgba(255,255,255,.04); padding: 6px 10px; border-radius: 999px; white-space: nowrap; }
+    .icon { width: 18px; height: 18px; opacity: .95; }
+    .toc { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+    .toc a { font-size: 12px; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--border); color: var(--muted); text-decoration: none; background: rgba(255,255,255,.03); }
+    .toc a:hover { color: var(--ink); border-color: var(--border-hover); }
+    .callout { padding: 14px; border-radius: var(--radius); border: 1px solid rgba(245,165,36,.22); background: var(--accent-dim); margin-bottom: 16px; }
+    .callout h3 { margin: 0 0 8px; font-size: 15px; }
+    .callout p { margin: 0; color: var(--muted); font-size: 14px; }
+    .callout a { color: var(--accent); }
+    .mental { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px; }
+    .mental .mini { padding: 12px; border: 1px solid var(--border); border-radius: var(--radius); background: rgba(255,255,255,.03); }
+    .mental .mini h3 { margin: 0 0 8px; font-size: 13px; }
+    .mental pre { margin: 0; font-family: var(--font-mono); font-size: 12px; color: var(--muted); line-height: 1.55; white-space: pre-wrap; }
+    .section-block { margin-bottom: 28px; }
+    .section-block h2 { margin: 0 0 6px; font-size: 1.15rem; scroll-margin-top: 70px; }
+    .section-intro { margin: 0 0 12px; color: var(--muted); font-size: 14px; max-width: 65ch; }
+    .steps { display: flex; flex-direction: column; gap: 10px; }
+    details { border: 1px solid var(--border); background: rgba(255,255,255,.03); border-radius: var(--radius); padding: 10px 12px; }
+    summary { cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 10px; font-weight: 700; user-select: none; }
+    summary::-webkit-details-marker { display: none; }
+    .cmd, .wf-title { font-family: var(--font-mono); font-size: 12.5px; font-weight: 600; color: var(--ink); text-align: left; word-break: break-word; }
+    .chev { width: 22px; height: 22px; border-radius: 999px; border: 1px solid var(--border); display: grid; place-items: center; background: rgba(0,0,0,.12); flex-shrink: 0; transition: transform .15s; }
+    details[open] .chev { transform: rotate(180deg); }
+    .detail-body { margin-top: 10px; display: flex; flex-direction: column; gap: 10px; }
+    .plain { margin: 0; color: var(--muted); font-size: 13.5px; }
+    .note { margin: 0; color: var(--muted); font-size: 12.5px; border-left: 2px solid var(--border); padding-left: 10px; }
+    .codebox { border: 1px solid var(--border-hover); background: rgba(0,0,0,.28); border-radius: var(--radius); overflow: hidden; }
+    .codebox.compact pre { font-size: 11.5px; padding: 10px; }
+    .codebar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 12px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,.03); color: var(--muted); font-size: 12px; }
+    .codebox pre { margin: 0; padding: 12px; overflow: auto; font-family: var(--font-mono); font-size: 12.5px; color: #eaf0ff; line-height: 1.55; white-space: pre-wrap; }
+    .badge { font-size: 11px; padding: 4px 8px; border-radius: 999px; border: 1px solid var(--border); background: rgba(0,0,0,.12); color: var(--muted); flex-shrink: 0; }
+    .badge.bad { border-color: rgba(239,68,68,.35); background: rgba(239,68,68,.1); color: #ffd9d9; }
+    .aside { position: sticky; top: 60px; display: flex; flex-direction: column; gap: 14px; }
+    @media (max-width: 980px) { .aside { position: static; } }
+    .search input { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: rgba(255,255,255,.04); color: var(--ink); outline: none; }
+    .tagrow { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .tag { font-size: 12px; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--border); background: rgba(255,255,255,.03); color: var(--muted); cursor: pointer; user-select: none; }
+    .tag.active { border-color: rgba(245,165,36,.35); background: var(--accent-dim); color: var(--ink); }
+    .combo-item { padding: 10px; border: 1px solid var(--border); border-radius: var(--radius); background: rgba(255,255,255,.03); margin-bottom: 10px; }
+    .combo-h { font-weight: 700; font-size: 13px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .danger-row { display: flex; flex-direction: column; gap: 4px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .danger-row:last-child { border-bottom: none; }
+    .danger-row code { font-family: var(--font-mono); color: #ffd9d9; }
+    .danger-alt { color: var(--muted); font-size: 12px; }
+    .toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); background: rgba(10,10,10,.92); border: 1px solid var(--border-hover); color: var(--ink); padding: 10px 12px; border-radius: 999px; box-shadow: var(--shadow); display: none; gap: 10px; align-items: center; font-size: 13px; z-index: 200; }
+    .toast.show { display: flex; }
+    .toast .ok { width: 10px; height: 10px; border-radius: 999px; background: var(--good); }
+    footer { text-align: center; padding: 40px 24px; border-top: 1px solid var(--border); color: var(--muted); font-size: .875rem; }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .back-top { position: fixed; bottom: 28px; right: 28px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 999px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: var(--muted); cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .2s; text-decoration: none; font-size: 18px; }
+    .back-top.visible { opacity: 1; pointer-events: auto; }
+    .nav-toggle { display: none; background: none; border: none; color: var(--muted); cursor: pointer; padding: 4px; margin-left: auto; }
+    @media (max-width: 640px) {
+      .site-nav { padding: 0 16px; flex-wrap: wrap; }
+      .nav-toggle { display: flex; }
+      .nav-divider { display: none; }
+      .nav-links { display: none; width: 100%; order: 10; padding: 8px 0; border-top: 1px solid var(--border); }
+      .site-nav.nav-open .nav-links { display: flex; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="site-nav" aria-label="Site navigation">
+  <a href="index.html" class="home-link">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+    Hi Bot Code
+  </a>
+  <div class="nav-divider" aria-hidden="true"></div>
+  <div class="nav-links">
+    <a href="editor.html">Editor</a>
+    <a href="/challenges/">Challenges</a>
+    <a href="get-started-coding.html">Get Started</a>
+    <a href="git-command-reference.html" aria-current="page">Git Reference</a>
+    <a href="pull-requests-github.html">Pull Requests</a>
+    <a href="learn.html">Learn</a>
+    <a href="glossary.html">Glossary</a>
+  </div>
+  <button class="nav-toggle" aria-label="Menu" aria-expanded="false" onclick="this.setAttribute('aria-expanded',this.getAttribute('aria-expanded')==='false'?'true':'false');this.closest('.site-nav').classList.toggle('nav-open')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+</nav>
+
+<div class="wrap">
+  <header class="page-header">
+    <div>
+      <div class="kicker"><span class="dot"></span> Free reference · No sign-up</div>
+      <h1>Git Command Reference</h1>
+      <p class="sub">Learn what each Git command does in plain English, copy the exact syntax, and follow safe daily workflows — whether you are brand new or need a fast lookup.</p>
+    </div>
+    <div class="top-actions">
+      <button class="btn primary" type="button" id="copyBeginnerBtn">Copy beginner workflow</button>
+      <button class="btn" type="button" id="expandAllBtn">Expand all</button>
+      <button class="btn" type="button" id="collapseAllBtn">Collapse all</button>
+    </div>
+  </header>
+
+  <div class="grid">
+    <main class="card">
+      <div class="hd"><h2>Commands &amp; workflows</h2><div class="pill" id="countPill">0 visible</div></div>
+      <div class="bd" id="mainContent">
+        <nav class="toc" aria-label="On this page"><a href="#setup">1. Setup and identity</a>
+<a href="#starting">2. Starting a repository</a>
+<a href="#status-history">3. Checking status and history</a>
+<a href="#staging-commit">4. Staging and committing</a>
+<a href="#comparing">5. Comparing changes</a>
+<a href="#branches">6. Branches</a>
+<a href="#remotes">7. Working with remotes</a>
+<a href="#push-pull">8. Push and pull</a>
+<a href="#merging">9. Merging</a>
+<a href="#rebasing">10. Rebasing</a>
+<a href="#undoing">11. Undoing things safely</a>
+<a href="#stashing">12. Stashing temporary work</a>
+<a href="#tags">13. Tags and releases</a>
+<a href="#cleaning">14. Cleaning files</a>
+<a href="#gitignore">15. Tracking files and .gitignore</a>
+<a href="#finding">16. Finding things</a>
+<a href="#reflog">17. Reflog: recover lost work</a>
+<a href="#cherry-pick">18. Cherry-picking</a>
+<a href="#submodules">19. Submodules</a>
+          <a href="#mental-model">Mental model</a>
+          <a href="#beginner-workflow">Beginner workflow</a>
+          <a href="#workflows">Full workflows</a>
+          <a href="#daily-combos">Daily combos</a>
+          <a href="#dangerous">Be careful</a>
+        </nav>
+
+        <div class="callout" id="beginner-workflow">
+          <h3>Beginner-safe default workflow (use ~90% of the time)</h3>
+          <p>Check status, branch from updated main, commit small clear changes, push, then open a pull request. <a href="pull-requests-github.html">Learn PRs on GitHub →</a></p>
+        </div>
+
+        <div class="mental" id="mental-model">
+          <div class="mini">
+            <h3>Three zones</h3>
+            <pre>Working directory  →  Staging area  →  Commit history
+      edit              git add           git commit</pre>
+          </div>
+          <div class="mini">
+            <h3>Local ↔ remote</h3>
+            <pre>Local repo  ↔  Remote repo
+ git pull      git push
+ git fetch</pre>
+          </div>
+          <div class="mini">
+            <h3>Branch flow</h3>
+            <pre>main
+  \
+   feature-branch
+
+Typical rhythm:
+git switch main → git pull → git switch -c feature/…
+→ edit → git add . → git commit → git push -u origin feature/…
+→ open pull request</pre>
+          </div>
+        </div>
+
+        
+        <section class="section-block" id="setup">
+          <h2>1. Setup and identity</h2>
+          <p class="section-intro">Tell Git who you are and set a few defaults before your first commit.</p>
+          <div class="steps">
+            <details class="cmd-card" data-tags="setup">
+              <summary><code class="cmd">git config --global user.name &quot;Your Name&quot;</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Sets the name that appears on your commits, like signing your work.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-1">Copy</button></div>
+                  <pre id="cmd-1">git config --global user.name &quot;Your Name&quot;</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="setup">
+              <summary><code class="cmd">git config --global user.email &quot;you@example.com&quot;</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Sets the email tied to your commits. Use the same email as your GitHub account when possible.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-2">Copy</button></div>
+                  <pre id="cmd-2">git config --global user.email &quot;you@example.com&quot;</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="setup">
+              <summary><code class="cmd">git config --global init.defaultBranch main</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Makes new repositories start with a branch named main instead of master.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-3">Copy</button></div>
+                  <pre id="cmd-3">git config --global init.defaultBranch main</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="setup">
+              <summary><code class="cmd">git config --global pull.rebase false</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> When you pull, Git merges by default instead of rebasing. A simple default for beginners.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-4">Copy</button></div>
+                  <pre id="cmd-4">git config --global pull.rebase false</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="setup">
+              <summary><code class="cmd">git config --global core.editor &quot;code --wait&quot;</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Opens VS Code when Git needs you to write a longer message (for example during a rebase).</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-5">Copy</button></div>
+                  <pre id="cmd-5">git config --global core.editor &quot;code --wait&quot;</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="setup daily">
+              <summary><code class="cmd">git config --list</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Shows every Git setting currently in effect.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-6">Copy</button></div>
+                  <pre id="cmd-6">git config --list</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="setup">
+              <summary><code class="cmd">git config user.name</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Shows just your configured user name.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-7">Copy</button></div>
+                  <pre id="cmd-7">git config user.name</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="setup">
+              <summary><code class="cmd">git config user.email</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Shows just your configured email.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-8">Copy</button></div>
+                  <pre id="cmd-8">git config user.email</pre>
+                </div>
+                
+              </div>
+            </details></div>
+        </section>
+
+        <section class="section-block" id="starting">
+          <h2>2. Starting a repository</h2>
+          <p class="section-intro">Create a new project folder under Git, or copy an existing project from GitHub.</p>
+          <div class="steps">
+            <details class="cmd-card workflow-card" data-tags="setup workflow">
+              <summary><span class="wf-title">Create a new local repo</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Make a folder, step into it, and turn it into a Git project.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-9">Copy</button></div>
+                  <pre id="cmd-9">mkdir my-project
+cd my-project
+git init</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="setup remote">
+              <summary><code class="cmd">git clone https://github.com/user/repo.git</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Downloads a copy of a remote repository to your computer.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-10">Copy</button></div>
+                  <pre id="cmd-10">git clone https://github.com/user/repo.git</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card workflow-card" data-tags="setup remote">
+              <summary><span class="wf-title">Clone into a custom folder</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Same as clone, but puts the files in a folder name you choose.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-11">Copy</button></div>
+                  <pre id="cmd-11">git clone https://github.com/user/repo.git my-folder
+cd my-folder</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="setup remote branch">
+              <summary><code class="cmd">git clone -b branch-name https://github.com/user/repo.git</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Clones only a specific branch instead of the default one.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-12">Copy</button></div>
+                  <pre id="cmd-12">git clone -b branch-name https://github.com/user/repo.git</pre>
+                </div>
+                
+              </div>
+            </details></div>
+        </section>
+
+        <section class="section-block" id="status-history">
+          <h2>3. Checking status and history</h2>
+          <p class="section-intro">See what changed and browse past snapshots of your project.</p>
+          <div class="steps">
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git status</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Answers: which files changed, which are staged, and which branch you are on.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-13">Copy</button></div>
+                  <pre id="cmd-13">git status</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git status -s</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> A shorter, one-line-per-file status view.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-14">Copy</button></div>
+                  <pre id="cmd-14">git status -s</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git log</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Lists past commits with messages, authors, and dates.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-15">Copy</button></div>
+                  <pre id="cmd-15">git log</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git log --oneline</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Compact history — one short line per commit.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-16">Copy</button></div>
+                  <pre id="cmd-16">git log --oneline</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily branch">
+              <summary><code class="cmd">git log --oneline --graph --all --decorate</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Shows branches and merges as a text diagram — great for understanding structure.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-17">Copy</button></div>
+                  <pre id="cmd-17">git log --oneline --graph --all --decorate</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git log -5 --oneline</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Shows only the five most recent commits.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-18">Copy</button></div>
+                  <pre id="cmd-18">git log -5 --oneline</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git show &lt;commit-hash&gt;</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Opens one specific commit and the exact changes it introduced.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-19">Copy</button></div>
+                  <pre id="cmd-19">git show &lt;commit-hash&gt;</pre>
+                </div>
+                
+              </div>
+            </details></div>
+        </section>
+
+        <section class="section-block" id="staging-commit">
+          <h2>4. Staging and committing</h2>
+          <p class="section-intro">Choose what goes into the next snapshot, then save that snapshot with a message.</p>
+          <div class="steps">
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git add file.txt</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Stages one file — marks it ready for the next commit.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-20">Copy</button></div>
+                  <pre id="cmd-20">git add file.txt</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git add .</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Stages every changed file in the current folder and subfolders.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-21">Copy</button></div>
+                  <pre id="cmd-21">git add .</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git add -u</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Stages only files Git already tracks — skips brand-new untracked files.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-22">Copy</button></div>
+                  <pre id="cmd-22">git add -u</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git add -p</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Walks you through changes hunk by hunk so you can stage only part of a file.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-23">Copy</button></div>
+                  <pre id="cmd-23">git add -p</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git commit -m &quot;Describe the change&quot;</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Saves staged changes as a permanent snapshot with a short message.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-24">Copy</button></div>
+                  <pre id="cmd-24">git commit -m &quot;Describe the change&quot;</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git commit -am &quot;Describe the change&quot;</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Stages all tracked modified files and commits in one step. Does not include new untracked files.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-25">Copy</button></div>
+                  <pre id="cmd-25">git commit -am &quot;Describe the change&quot;</pre>
+                </div>
+                <p class="note">Note: <code>commit -am</code> does not include new untracked files.</p>
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily undo">
+              <summary><code class="cmd">git commit --amend</code><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Rewrites your most recent commit — useful right before you push.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-26">Copy</button></div>
+                  <pre id="cmd-26">git commit --amend</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily undo">
+              <summary><code class="cmd">git commit --amend -m &quot;New message&quot;</code><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Changes only the message on your last commit.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-27">Copy</button></div>
+                  <pre id="cmd-27">git commit --amend -m &quot;New message&quot;</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card workflow-card" data-tags="daily undo">
+              <summary><span class="wf-title">Add a forgotten file to last commit</span><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Stage the missing file and fold it into the previous commit without changing the message.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-28">Copy</button></div>
+                  <pre id="cmd-28">git add forgotten-file.txt
+git commit --amend --no-edit</pre>
+                </div>
+              </div>
+            </details></div>
+        </section>
+
+        <section class="section-block" id="comparing">
+          <h2>5. Comparing changes</h2>
+          <p class="section-intro">See exactly what lines changed before you commit or merge.</p>
+          <div class="steps">
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git diff</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Shows unstaged edits — what you changed but have not added yet.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-29">Copy</button></div>
+                  <pre id="cmd-29">git diff</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git diff --staged</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Shows what is staged and ready to commit. Same as <code>--cached</code>.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-30">Copy</button></div>
+                  <pre id="cmd-30">git diff --staged</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git diff --cached</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Alternate flag for staged changes.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-31">Copy</button></div>
+                  <pre id="cmd-31">git diff --cached</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily branch">
+              <summary><code class="cmd">git diff main..feature-branch</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Compares two branches to see what would change if you merged.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-32">Copy</button></div>
+                  <pre id="cmd-32">git diff main..feature-branch</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git diff &lt;commit1&gt; &lt;commit2&gt;</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Compares any two points in history.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-33">Copy</button></div>
+                  <pre id="cmd-33">git diff &lt;commit1&gt; &lt;commit2&gt;</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git diff --name-only</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Lists only file names that differ — no line-by-line detail.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-34">Copy</button></div>
+                  <pre id="cmd-34">git diff --name-only</pre>
+                </div>
+                
+              </div>
+            </details></div>
+        </section>
+
+        <section class="section-block" id="branches">
+          <h2>6. Branches</h2>
+          <p class="section-intro">Work on a separate line of development without disturbing main.</p>
+          <div class="steps">
+            <details class="cmd-card" data-tags="branch daily">
+              <summary><code class="cmd">git branch</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Lists local branches. The current one is marked with an asterisk.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-35">Copy</button></div>
+                  <pre id="cmd-35">git branch</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="branch">
+              <summary><code class="cmd">git branch -a</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Lists local and remote branches.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-36">Copy</button></div>
+                  <pre id="cmd-36">git branch -a</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="branch">
+              <summary><code class="cmd">git branch feature-name</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Creates a new branch but does not switch to it yet.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-37">Copy</button></div>
+                  <pre id="cmd-37">git branch feature-name</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="branch daily">
+              <summary><code class="cmd">git switch feature-name</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Moves you to another branch. Modern replacement for checkout.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-38">Copy</button></div>
+                  <pre id="cmd-38">git switch feature-name</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="branch">
+              <summary><code class="cmd">git checkout feature-name</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Older syntax — still common — to switch branches.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-39">Copy</button></div>
+                  <pre id="cmd-39">git checkout feature-name</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="branch daily workflow">
+              <summary><code class="cmd">git switch -c feature-name</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Creates a branch and switches to it in one step.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-40">Copy</button></div>
+                  <pre id="cmd-40">git switch -c feature-name</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="branch workflow">
+              <summary><code class="cmd">git checkout -b feature-name</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Older syntax for create-and-switch.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-41">Copy</button></div>
+                  <pre id="cmd-41">git checkout -b feature-name</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="branch">
+              <summary><code class="cmd">git branch -m new-branch-name</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Renames the branch you are currently on.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-42">Copy</button></div>
+                  <pre id="cmd-42">git branch -m new-branch-name</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="branch">
+              <summary><code class="cmd">git branch -d branch-name</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Deletes a merged local branch safely.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-43">Copy</button></div>
+                  <pre id="cmd-43">git branch -d branch-name</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="branch danger">
+              <summary><code class="cmd">git branch -D branch-name</code><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Force-deletes a branch even if it is not fully merged.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-44">Copy</button></div>
+                  <pre id="cmd-44">git branch -D branch-name</pre>
+                </div>
+                
+              </div>
+            </details></div>
+        </section>
+
+        <section class="section-block" id="remotes">
+          <h2>7. Working with remotes</h2>
+          <p class="section-intro">Connect your local repo to GitHub, GitLab, or another hosted copy.</p>
+          <div class="steps">
+            <details class="cmd-card" data-tags="remote">
+              <summary><code class="cmd">git remote -v</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Shows remote names and their URLs.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-45">Copy</button></div>
+                  <pre id="cmd-45">git remote -v</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="remote setup">
+              <summary><code class="cmd">git remote add origin https://github.com/user/repo.git</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Links your local repo to a remote named origin.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-46">Copy</button></div>
+                  <pre id="cmd-46">git remote add origin https://github.com/user/repo.git</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="remote">
+              <summary><code class="cmd">git remote set-url origin https://github.com/user/repo.git</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Changes where origin points — for example after moving a repo.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-47">Copy</button></div>
+                  <pre id="cmd-47">git remote set-url origin https://github.com/user/repo.git</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="remote">
+              <summary><code class="cmd">git remote remove origin</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Removes the origin remote connection.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-48">Copy</button></div>
+                  <pre id="cmd-48">git remote remove origin</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="remote daily">
+              <summary><code class="cmd">git fetch</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Downloads new commits from the remote without changing your files yet.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-49">Copy</button></div>
+                  <pre id="cmd-49">git fetch</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="remote">
+              <summary><code class="cmd">git fetch --all</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Fetches from every configured remote.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-50">Copy</button></div>
+                  <pre id="cmd-50">git fetch --all</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="remote">
+              <summary><code class="cmd">git fetch --prune</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Removes stale remote-tracking branches that were deleted on the server.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-51">Copy</button></div>
+                  <pre id="cmd-51">git fetch --prune</pre>
+                </div>
+                
+              </div>
+            </details></div>
+        </section>
+
+        <section class="section-block" id="push-pull">
+          <h2>8. Push and pull</h2>
+          <p class="section-intro">Send your commits upstream or bring teammates' work down to your machine.</p>
+          <div class="steps">
+            <details class="cmd-card" data-tags="remote daily workflow">
+              <summary><code class="cmd">git push</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Uploads your current branch commits to the matching remote branch.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-52">Copy</button></div>
+                  <pre id="cmd-52">git push</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="remote workflow">
+              <summary><code class="cmd">git push -u origin feature-name</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> First push of a new branch — also sets upstream so later pushes can be just <code>git push</code>.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-53">Copy</button></div>
+                  <pre id="cmd-53">git push -u origin feature-name</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="remote">
+              <summary><code class="cmd">git push origin main</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Pushes your main branch explicitly to origin.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-54">Copy</button></div>
+                  <pre id="cmd-54">git push origin main</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="remote daily workflow">
+              <summary><code class="cmd">git pull</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Fetches and merges remote changes into your current branch. Same as fetch + merge.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-55">Copy</button></div>
+                  <pre id="cmd-55">git pull</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card workflow-card" data-tags="remote daily">
+              <summary><span class="wf-title">Pull = fetch + merge</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> What pull does under the hood.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-56">Copy</button></div>
+                  <pre id="cmd-56">git fetch
+git merge</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="remote branch danger">
+              <summary><code class="cmd">git pull --rebase</code><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Replays your local commits on top of remote changes for a straighter history.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-57">Copy</button></div>
+                  <pre id="cmd-57">git pull --rebase</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card workflow-card" data-tags="remote">
+              <summary><span class="wf-title">Pull with rebase = fetch + rebase</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Equivalent steps when you pass --rebase.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-58">Copy</button></div>
+                  <pre id="cmd-58">git fetch
+git rebase origin/main</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="remote danger">
+              <summary><code class="cmd">git push --force-with-lease</code><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Overwrites the remote branch only if nobody else pushed since you last fetched — safer than --force.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-59">Copy</button></div>
+                  <pre id="cmd-59">git push --force-with-lease</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="remote danger">
+              <summary><code class="cmd">git push --force</code><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Overwrites remote history regardless. Can destroy teammates' work.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-60">Copy</button></div>
+                  <pre id="cmd-60">git push --force</pre>
+                </div>
+                <p class="note">Prefer <code>--force-with-lease</code> instead.</p>
+              </div>
+            </details></div>
+        </section>
+
+        <section class="section-block" id="merging">
+          <h2>9. Merging</h2>
+          <p class="section-intro">Combine another branch into the one you are on.</p>
+          <div class="steps">
+            <details class="cmd-card workflow-card" data-tags="branch workflow">
+              <summary><span class="wf-title">Merge feature into main</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Classic flow: update main, merge your feature, push.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-61">Copy</button></div>
+                  <pre id="cmd-61">git switch main
+git pull
+git merge feature-name
+git push</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="branch workflow">
+              <summary><code class="cmd">git merge branch-name</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Brings another branch's commits into your current branch.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-62">Copy</button></div>
+                  <pre id="cmd-62">git merge branch-name</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="branch undo">
+              <summary><code class="cmd">git merge --abort</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Cancels a conflicted merge and returns to the pre-merge state.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-63">Copy</button></div>
+                  <pre id="cmd-63">git merge --abort</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="branch">
+              <summary><code class="cmd">git merge --no-ff feature-name</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Always creates a merge commit even when a fast-forward is possible — preserves branch history.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-64">Copy</button></div>
+                  <pre id="cmd-64">git merge --no-ff feature-name</pre>
+                </div>
+                
+              </div>
+            </details></div>
+        </section>
+
+        <section class="section-block" id="rebasing">
+          <h2>10. Rebasing</h2>
+          <p class="section-intro">Replay your commits on top of another branch for a linear history. Rewrites commits — use with care.</p>
+          <div class="steps">
+            <details class="cmd-card workflow-card" data-tags="branch danger workflow">
+              <summary><span class="wf-title">Rebase feature onto main</span><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Move your branch to start from the latest main.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-65">Copy</button></div>
+                  <pre id="cmd-65">git switch feature-name
+git fetch origin
+git rebase origin/main</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="cmd-card workflow-card" data-tags="branch undo danger">
+              <summary><span class="wf-title">Continue after resolving conflicts</span><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> After fixing conflict markers, stage files and tell Git to keep rebasing.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-66">Copy</button></div>
+                  <pre id="cmd-66">git add .
+git rebase --continue</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="branch undo danger">
+              <summary><code class="cmd">git rebase --abort</code><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Stops the rebase and restores the branch to how it was before.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-67">Copy</button></div>
+                  <pre id="cmd-67">git rebase --abort</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="branch danger undo">
+              <summary><code class="cmd">git rebase -i HEAD~3</code><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Interactive rebase on the last three commits — squash, reorder, edit, or drop commits.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-68">Copy</button></div>
+                  <pre id="cmd-68">git rebase -i HEAD~3</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card workflow-card" data-tags="branch">
+              <summary><span class="wf-title">Interactive rebase actions</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Common verbs you pick in the rebase editor.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-69">Copy</button></div>
+                  <pre id="cmd-69">pick    use commit
+reword  change commit message
+edit    stop to amend commit
+squash  combine with previous commit
+fixup   combine and discard message
+drop    remove commit</pre>
+                </div>
+              </div>
+            </details></div>
+        </section>
+
+        <section class="section-block" id="undoing">
+          <h2>11. Undoing things safely</h2>
+          <p class="section-intro">Unstage, discard, reset, or revert — pick the tool that matches whether work is shared.</p>
+          <div class="steps">
+            <details class="cmd-card" data-tags="undo daily">
+              <summary><code class="cmd">git restore --staged file.txt</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Removes a file from the staging area but keeps your edits in the file.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-70">Copy</button></div>
+                  <pre id="cmd-70">git restore --staged file.txt</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="undo">
+              <summary><code class="cmd">git reset HEAD file.txt</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Older way to unstage one file.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-71">Copy</button></div>
+                  <pre id="cmd-71">git reset HEAD file.txt</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="undo daily">
+              <summary><code class="cmd">git restore file.txt</code><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Throws away unstaged changes in one file — back to last commit.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-72">Copy</button></div>
+                  <pre id="cmd-72">git restore file.txt</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="undo danger">
+              <summary><code class="cmd">git checkout -- file.txt</code><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Older syntax to discard changes in one file.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-73">Copy</button></div>
+                  <pre id="cmd-73">git checkout -- file.txt</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="undo danger">
+              <summary><code class="cmd">git restore .</code><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Discards all unstaged changes in the current directory.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-74">Copy</button></div>
+                  <pre id="cmd-74">git restore .</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="undo danger">
+              <summary><code class="cmd">git reset --mixed HEAD~1</code><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Moves branch back one commit; changes become unstaged edits in your working folder.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-75">Copy</button></div>
+                  <pre id="cmd-75">git reset --mixed HEAD~1</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="undo danger">
+              <summary><code class="cmd">git reset --soft HEAD~1</code><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Moves branch back one commit but keeps changes staged.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-76">Copy</button></div>
+                  <pre id="cmd-76">git reset --soft HEAD~1</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="undo danger">
+              <summary><code class="cmd">git reset --hard HEAD~1</code><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Deletes the last commit and all its changes from your working tree.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-77">Copy</button></div>
+                  <pre id="cmd-77">git reset --hard HEAD~1</pre>
+                </div>
+                <p class="note">Dangerous. May be recoverable via reflog if recent.</p>
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="undo daily workflow">
+              <summary><code class="cmd">git revert &lt;commit-hash&gt;</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Creates a new commit that undoes a past commit — safe for shared history.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-78">Copy</button></div>
+                  <pre id="cmd-78">git revert &lt;commit-hash&gt;</pre>
+                </div>
+                
+              </div>
+            </details></div>
+        </section>
+
+        <section class="section-block" id="stashing">
+          <h2>12. Stashing temporary work</h2>
+          <p class="section-intro">Set unfinished work aside in a drawer so you can switch branches cleanly.</p>
+          <div class="steps">
+            <details class="cmd-card" data-tags="daily workflow">
+              <summary><code class="cmd">git stash</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Temporarily shelves uncommitted changes so your working tree is clean.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-79">Copy</button></div>
+                  <pre id="cmd-79">git stash</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="workflow">
+              <summary><code class="cmd">git stash push -m &quot;WIP before switching branches&quot;</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Same as stash, but labels the stash so you remember why.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-80">Copy</button></div>
+                  <pre id="cmd-80">git stash push -m &quot;WIP before switching branches&quot;</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="workflow">
+              <summary><code class="cmd">git stash -u</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Also stashes untracked files, not just tracked edits.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-81">Copy</button></div>
+                  <pre id="cmd-81">git stash -u</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git stash list</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Shows every saved stash.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-82">Copy</button></div>
+                  <pre id="cmd-82">git stash list</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git stash apply</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Re-applies the latest stash but keeps a copy in the stash list.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-83">Copy</button></div>
+                  <pre id="cmd-83">git stash apply</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily workflow">
+              <summary><code class="cmd">git stash pop</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Applies the latest stash and removes it from the list.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-84">Copy</button></div>
+                  <pre id="cmd-84">git stash pop</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git stash apply stash@{2}</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Applies a specific stash by its index.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-85">Copy</button></div>
+                  <pre id="cmd-85">git stash apply stash@{2}</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="undo">
+              <summary><code class="cmd">git stash drop stash@{0}</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Deletes one stash entry.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-86">Copy</button></div>
+                  <pre id="cmd-86">git stash drop stash@{0}</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="danger undo">
+              <summary><code class="cmd">git stash clear</code><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Deletes every stash.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-87">Copy</button></div>
+                  <pre id="cmd-87">git stash clear</pre>
+                </div>
+                
+              </div>
+            </details></div>
+        </section>
+
+        <section class="section-block" id="tags">
+          <h2>13. Tags and releases</h2>
+          <p class="section-intro">Mark important points in history — like v1.0.0 — for releases.</p>
+          <div class="steps">
+            <details class="cmd-card" data-tags="remote">
+              <summary><code class="cmd">git tag</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Lists tags in the repository.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-88">Copy</button></div>
+                  <pre id="cmd-88">git tag</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="remote">
+              <summary><code class="cmd">git tag v1.0.0</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Creates a lightweight tag at the current commit.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-89">Copy</button></div>
+                  <pre id="cmd-89">git tag v1.0.0</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="remote">
+              <summary><code class="cmd">git tag -a v1.0.0 -m &quot;Release v1.0.0&quot;</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Creates an annotated tag with a message — better for releases.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-90">Copy</button></div>
+                  <pre id="cmd-90">git tag -a v1.0.0 -m &quot;Release v1.0.0&quot;</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="remote">
+              <summary><code class="cmd">git push origin v1.0.0</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Publishes one tag to the remote.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-91">Copy</button></div>
+                  <pre id="cmd-91">git push origin v1.0.0</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="remote">
+              <summary><code class="cmd">git push --tags</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Pushes all local tags.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-92">Copy</button></div>
+                  <pre id="cmd-92">git push --tags</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="undo">
+              <summary><code class="cmd">git tag -d v1.0.0</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Deletes a tag locally.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-93">Copy</button></div>
+                  <pre id="cmd-93">git tag -d v1.0.0</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="remote undo">
+              <summary><code class="cmd">git push origin --delete v1.0.0</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Deletes a tag on the remote.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-94">Copy</button></div>
+                  <pre id="cmd-94">git push origin --delete v1.0.0</pre>
+                </div>
+                
+              </div>
+            </details></div>
+        </section>
+
+        <section class="section-block" id="cleaning">
+          <h2>14. Cleaning files</h2>
+          <p class="section-intro">Remove untracked files Git is not managing. Read carefully before running.</p>
+          <div class="steps">
+            <details class="cmd-card" data-tags="undo">
+              <summary><code class="cmd">git clean -n</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Dry run — shows what would be deleted without deleting anything.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-95">Copy</button></div>
+                  <pre id="cmd-95">git clean -n</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="danger">
+              <summary><code class="cmd">git clean -f</code><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Deletes untracked files.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-96">Copy</button></div>
+                  <pre id="cmd-96">git clean -f</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="danger">
+              <summary><code class="cmd">git clean -fd</code><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Deletes untracked files and folders.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-97">Copy</button></div>
+                  <pre id="cmd-97">git clean -fd</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="danger">
+              <summary><code class="cmd">git clean -fdx</code><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Also deletes ignored files like build outputs and node_modules.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-98">Copy</button></div>
+                  <pre id="cmd-98">git clean -fdx</pre>
+                </div>
+                <p class="note">Very dangerous. Can remove dependency folders and local build artifacts.</p>
+              </div>
+            </details></div>
+        </section>
+
+        <section class="section-block" id="gitignore">
+          <h2>15. Tracking files and .gitignore</h2>
+          <p class="section-intro">Tell Git which files to ignore and stop tracking secrets or build output.</p>
+          <div class="steps">
+            <details class="cmd-card workflow-card" data-tags="setup">
+              <summary><span class="wf-title">Create .gitignore</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> A text file listing paths Git should never track.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-99">Copy</button></div>
+                  <pre id="cmd-99">touch .gitignore
+
+# Common entries:
+node_modules/
+.env
+.DS_Store
+dist/
+build/
+*.log</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git rm --cached file.txt</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Stops tracking a file but leaves it on your disk.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-100">Copy</button></div>
+                  <pre id="cmd-100">git rm --cached file.txt</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card workflow-card" data-tags="daily">
+              <summary><span class="wf-title">Stop tracking a folder</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Untrack a whole directory, update gitignore, commit.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-101">Copy</button></div>
+                  <pre id="cmd-101">git rm -r --cached folder-name/
+git add .gitignore
+git commit -m &quot;Update gitignore&quot;</pre>
+                </div>
+              </div>
+            </details></div>
+        </section>
+
+        <section class="section-block" id="finding">
+          <h2>16. Finding things</h2>
+          <p class="section-intro">Search code, blame lines, and hunt commits by message or content.</p>
+          <div class="steps">
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git grep &quot;search term&quot;</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Searches tracked files for text — like grep but respects Git's view of the repo.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-102">Copy</button></div>
+                  <pre id="cmd-102">git grep &quot;search term&quot;</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git blame file.txt</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Shows who last changed each line and in which commit.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-103">Copy</button></div>
+                  <pre id="cmd-103">git blame file.txt</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git log --grep=&quot;bug fix&quot;</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Finds commits whose messages contain a phrase.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-104">Copy</button></div>
+                  <pre id="cmd-104">git log --grep=&quot;bug fix&quot;</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git log -S &quot;functionName&quot;</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Finds commits that added or removed a specific string.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-105">Copy</button></div>
+                  <pre id="cmd-105">git log -S &quot;functionName&quot;</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="daily">
+              <summary><code class="cmd">git log -- file.txt</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Shows commit history that touched one file.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-106">Copy</button></div>
+                  <pre id="cmd-106">git log -- file.txt</pre>
+                </div>
+                
+              </div>
+            </details></div>
+        </section>
+
+        <section class="section-block" id="reflog">
+          <h2>17. Reflog: recover lost work</h2>
+          <p class="section-intro">Git keeps a journal of where your HEAD and branches have been — a safety net after mistakes.</p>
+          <div class="steps">
+            <details class="cmd-card" data-tags="undo daily">
+              <summary><code class="cmd">git reflog</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Lists recent branch movements — your undo history for local actions.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-107">Copy</button></div>
+                  <pre id="cmd-107">git reflog</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="undo danger">
+              <summary><code class="cmd">git reset --hard &lt;reflog-hash&gt;</code><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Jumps your branch back to an earlier reflog entry.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-108">Copy</button></div>
+                  <pre id="cmd-108">git reset --hard &lt;reflog-hash&gt;</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="undo">
+              <summary><code class="cmd">git branch rescue-branch &lt;reflog-hash&gt;</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Creates a new branch pointing at recovered work without moving your current branch.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-109">Copy</button></div>
+                  <pre id="cmd-109">git branch rescue-branch &lt;reflog-hash&gt;</pre>
+                </div>
+                
+              </div>
+            </details></div>
+        </section>
+
+        <section class="section-block" id="cherry-pick">
+          <h2>18. Cherry-picking</h2>
+          <p class="section-intro">Copy one specific commit from another branch onto your current branch.</p>
+          <div class="steps">
+            <details class="cmd-card" data-tags="branch">
+              <summary><code class="cmd">git cherry-pick &lt;commit-hash&gt;</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Applies a single commit's changes here.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-110">Copy</button></div>
+                  <pre id="cmd-110">git cherry-pick &lt;commit-hash&gt;</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="branch">
+              <summary><code class="cmd">git cherry-pick &lt;hash1&gt; &lt;hash2&gt;</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Applies several commits in order.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-111">Copy</button></div>
+                  <pre id="cmd-111">git cherry-pick &lt;hash1&gt; &lt;hash2&gt;</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="undo">
+              <summary><code class="cmd">git cherry-pick --abort</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Cancels a conflicted cherry-pick.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-112">Copy</button></div>
+                  <pre id="cmd-112">git cherry-pick --abort</pre>
+                </div>
+                
+              </div>
+            </details></div>
+        </section>
+
+        <section class="section-block" id="submodules">
+          <h2>19. Submodules</h2>
+          <p class="section-intro">Repos that embed other repos — common in larger projects. Optional until you need them.</p>
+          <div class="steps">
+            <details class="cmd-card" data-tags="remote setup">
+              <summary><code class="cmd">git clone --recurse-submodules https://github.com/user/repo.git</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Clones a repo and its nested sub-repositories in one go.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-113">Copy</button></div>
+                  <pre id="cmd-113">git clone --recurse-submodules https://github.com/user/repo.git</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="remote">
+              <summary><code class="cmd">git submodule update --init --recursive</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Fetches submodules after a plain clone.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-114">Copy</button></div>
+                  <pre id="cmd-114">git submodule update --init --recursive</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="setup">
+              <summary><code class="cmd">git submodule add https://github.com/user/library.git path/to/library</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Embeds another repo at a path inside yours.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-115">Copy</button></div>
+                  <pre id="cmd-115">git submodule add https://github.com/user/library.git path/to/library</pre>
+                </div>
+                
+              </div>
+            </details>
+
+            <details class="cmd-card" data-tags="remote">
+              <summary><code class="cmd">git submodule update --remote</code><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Updates submodules to the latest commit on their tracked branch.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-116">Copy</button></div>
+                  <pre id="cmd-116">git submodule update --remote</pre>
+                </div>
+                
+              </div>
+            </details></div>
+        </section>
+
+        <section class="section-block" id="workflows">
+          <h2>20. Common full workflows</h2>
+          <p class="section-intro">End-to-end sequences you can copy when a single command is not enough.</p>
+          <div class="steps">
+            <details class="cmd-card workflow-card" data-tags="workflow setup">
+              <summary><span class="wf-title">New project to GitHub</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> From empty folder to first push on main.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-117">Copy</button></div>
+                  <pre id="cmd-117">mkdir my-project
+cd my-project
+git init
+git add .
+git commit -m &quot;Initial commit&quot;
+git branch -M main
+git remote add origin https://github.com/user/repo.git
+git push -u origin main</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="cmd-card workflow-card" data-tags="workflow daily">
+              <summary><span class="wf-title">Clone, edit, commit, push</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Day-one contributor flow on a feature branch.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-118">Copy</button></div>
+                  <pre id="cmd-118">git clone https://github.com/user/repo.git
+cd repo
+git switch -c feature/my-change
+# edit files
+git status
+git add .
+git commit -m &quot;Add my change&quot;
+git push -u origin feature/my-change</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="cmd-card workflow-card" data-tags="workflow daily">
+              <summary><span class="wf-title">Update your local main branch</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Get the latest main from the server.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-119">Copy</button></div>
+                  <pre id="cmd-119">git switch main
+git pull</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="cmd-card workflow-card" data-tags="workflow daily">
+              <summary><span class="wf-title">Update main (explicit)</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Safer two-step version — fetch first, then merge.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-120">Copy</button></div>
+                  <pre id="cmd-120">git switch main
+git fetch origin
+git merge origin/main</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="cmd-card workflow-card" data-tags="workflow daily">
+              <summary><span class="wf-title">Create feature branch from latest main</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Start new work from an up-to-date main.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-121">Copy</button></div>
+                  <pre id="cmd-121">git switch main
+git pull
+git switch -c feature/new-thing</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="cmd-card workflow-card" data-tags="workflow branch">
+              <summary><span class="wf-title">Update feature with merge</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Bring main into your feature branch via merge.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-122">Copy</button></div>
+                  <pre id="cmd-122">git switch feature/new-thing
+git fetch origin
+git merge origin/main</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="cmd-card workflow-card" data-tags="workflow branch danger">
+              <summary><span class="wf-title">Update feature with rebase</span><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Replay your commits on top of latest main.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-123">Copy</button></div>
+                  <pre id="cmd-123">git switch feature/new-thing
+git fetch origin
+git rebase origin/main
+git push --force-with-lease</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="cmd-card workflow-card" data-tags="workflow">
+              <summary><span class="wf-title">Finish feature with merge</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Land the feature on main and delete the branch.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-124">Copy</button></div>
+                  <pre id="cmd-124">git switch main
+git pull
+git merge feature/new-thing
+git push
+git branch -d feature/new-thing</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="cmd-card workflow-card" data-tags="workflow undo daily">
+              <summary><span class="wf-title">Fix mistake before committing</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Review and discard or unstage before commit.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-125">Copy</button></div>
+                  <pre id="cmd-125">git status
+git diff
+git restore file.txt
+# or unstage:
+git restore --staged file.txt</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="cmd-card workflow-card" data-tags="workflow undo">
+              <summary><span class="wf-title">Fix last commit before pushing</span><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Amend message or contents while still local.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-126">Copy</button></div>
+                  <pre id="cmd-126">git add .
+git commit --amend --no-edit
+# or change message:
+git commit --amend -m &quot;Better commit message&quot;</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="cmd-card workflow-card" data-tags="workflow undo daily">
+              <summary><span class="wf-title">Undo a pushed commit safely</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Use revert — does not rewrite shared history.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-127">Copy</button></div>
+                  <pre id="cmd-127">git revert &lt;commit-hash&gt;
+git push</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="cmd-card workflow-card" data-tags="workflow undo danger">
+              <summary><span class="wf-title">Committed to main by mistake</span><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Rescue work onto a branch and reset main.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-128">Copy</button></div>
+                  <pre id="cmd-128">git branch feature/save-my-work
+git reset --hard origin/main
+git switch feature/save-my-work</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="cmd-card workflow-card" data-tags="workflow daily">
+              <summary><span class="wf-title">Save work and switch branches</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Stash, switch, come back and pop.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-129">Copy</button></div>
+                  <pre id="cmd-129">git stash push -m &quot;WIP&quot;
+git switch other-branch
+# later:
+git switch original-branch
+git stash pop</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="cmd-card workflow-card" data-tags="workflow branch">
+              <summary><span class="wf-title">Resolve merge conflicts</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Fix markers, stage, commit.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-130">Copy</button></div>
+                  <pre id="cmd-130">git status
+# open conflicted files and fix them
+git add .
+git commit</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="cmd-card workflow-card" data-tags="workflow branch danger">
+              <summary><span class="wf-title">Resolve rebase conflicts</span><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Fix, stage, continue — or abort.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-131">Copy</button></div>
+                  <pre id="cmd-131">git status
+# fix files
+git add .
+git rebase --continue
+# abort if needed:
+git rebase --abort</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="cmd-card workflow-card" data-tags="workflow danger undo">
+              <summary><span class="wf-title">Squash last 3 commits</span><span class="badge bad">careful</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Interactive rebase then force-push with lease.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-132">Copy</button></div>
+                  <pre id="cmd-132">git rebase -i HEAD~3
+# keep first as pick, others squash or fixup
+git push --force-with-lease</pre>
+                </div>
+              </div>
+            </details>
+
+            <details class="cmd-card workflow-card" data-tags="workflow branch">
+              <summary><span class="wf-title">Delete local and remote branch</span><span class="chev" aria-hidden="true">&#x2304;</span></summary>
+              <div class="detail-body">
+                <p class="plain"><strong>In plain English:</strong> Clean up after merge.</p>
+                <div class="codebox">
+                  <div class="codebar"><span>Terminal</span><button class="btn" type="button" data-copy="#cmd-133">Copy</button></div>
+                  <pre id="cmd-133">git branch -d feature/old-branch
+git push origin --delete feature/old-branch</pre>
+                </div>
+              </div>
+            </details></div>
+        </section>
+
+        <section class="section-block" id="daily-combos">
+          <h2>21. Most useful daily combinations</h2>
+          <p class="section-intro">Short command chains for recurring situations. Expand any section above for detail.</p>
+          <div class="combo-item" data-tags="daily">
+    <div class="combo-h">Where am I and what changed?</div>
+    <div class="codebox compact">
+      <div class="codebar"><span>Combo</span><button class="btn" type="button" data-copy="#cmd-134">Copy</button></div>
+      <pre id="cmd-134">git branch
+git status
+git diff</pre>
+    </div>
+  </div>
+<div class="combo-item" data-tags="daily workflow">
+    <div class="combo-h">Save my work</div>
+    <div class="codebox compact">
+      <div class="codebar"><span>Combo</span><button class="btn" type="button" data-copy="#cmd-135">Copy</button></div>
+      <pre id="cmd-135">git add .
+git commit -m &quot;Meaningful message&quot;</pre>
+    </div>
+  </div>
+<div class="combo-item" data-tags="daily workflow">
+    <div class="combo-h">Get latest code</div>
+    <div class="codebox compact">
+      <div class="codebar"><span>Combo</span><button class="btn" type="button" data-copy="#cmd-136">Copy</button></div>
+      <pre id="cmd-136">git pull
+# or:
+git fetch origin
+git merge origin/main</pre>
+    </div>
+  </div>
+<div class="combo-item" data-tags="workflow daily">
+    <div class="combo-h">Start new work safely</div>
+    <div class="codebox compact">
+      <div class="codebar"><span>Combo</span><button class="btn" type="button" data-copy="#cmd-137">Copy</button></div>
+      <pre id="cmd-137">git switch main
+git pull
+git switch -c feature/name</pre>
+    </div>
+  </div>
+<div class="combo-item" data-tags="daily">
+    <div class="combo-h">Review before committing</div>
+    <div class="codebox compact">
+      <div class="codebar"><span>Combo</span><button class="btn" type="button" data-copy="#cmd-138">Copy</button></div>
+      <pre id="cmd-138">git status
+git diff
+git add -p
+git diff --staged
+git commit -m &quot;Message&quot;</pre>
+    </div>
+  </div>
+<div class="combo-item" data-tags="workflow remote">
+    <div class="combo-h">Push a new branch</div>
+    <div class="codebox compact">
+      <div class="codebar"><span>Combo</span><button class="btn" type="button" data-copy="#cmd-139">Copy</button></div>
+      <pre id="cmd-139">git push -u origin feature/name</pre>
+    </div>
+  </div>
+<div class="combo-item" data-tags="workflow daily">
+    <div class="combo-h">Switch branches mid-work</div>
+    <div class="codebox compact">
+      <div class="codebar"><span>Combo</span><button class="btn" type="button" data-copy="#cmd-140">Copy</button></div>
+      <pre id="cmd-140">git stash -u
+git switch other-branch</pre>
+    </div>
+  </div>
+<div class="combo-item" data-tags="workflow branch danger">
+    <div class="combo-h">Bring branch up to date<span class="badge bad">careful</span></div>
+    <div class="codebox compact">
+      <div class="codebar"><span>Combo</span><button class="btn" type="button" data-copy="#cmd-141">Copy</button></div>
+      <pre id="cmd-141">git fetch origin
+git rebase origin/main</pre>
+    </div>
+  </div>
+<div class="combo-item" data-tags="undo danger">
+    <div class="combo-h">Undo last local commit, keep work<span class="badge bad">careful</span></div>
+    <div class="codebox compact">
+      <div class="codebar"><span>Combo</span><button class="btn" type="button" data-copy="#cmd-142">Copy</button></div>
+      <pre id="cmd-142">git reset --soft HEAD~1</pre>
+    </div>
+  </div>
+<div class="combo-item" data-tags="danger undo">
+    <div class="combo-h">Throw away all local changes<span class="badge bad">careful</span></div>
+    <div class="codebox compact">
+      <div class="codebar"><span>Combo</span><button class="btn" type="button" data-copy="#cmd-143">Copy</button></div>
+      <pre id="cmd-143">git reset --hard
+git clean -fd</pre>
+    </div>
+  </div>
+        </section>
+
+        <section class="section-block" id="dangerous">
+          <h2>24. Commands to be careful with</h2>
+          <p class="section-intro">These can destroy or rewrite work. Prefer the safer alternatives. Before risky ops: <code>git branch backup-$(date +%Y%m%d)</code> or <code>git tag backup-before-reset</code>.</p>
+          <div class="danger-row"><code>git reset --hard</code><span class="danger-alt">Safer: Use revert for shared commits; soft/mixed reset locally</span></div>
+<div class="danger-row"><code>git clean -fd</code><span class="danger-alt">Safer: Run git clean -n first (dry run)</span></div>
+<div class="danger-row"><code>git clean -fdx</code><span class="danger-alt">Safer: Never on a repo with local env or build dirs you need</span></div>
+<div class="danger-row"><code>git push --force</code><span class="danger-alt">Safer: git push --force-with-lease</span></div>
+<div class="danger-row"><code>git rebase</code><span class="danger-alt">Safer: Merge instead if others share your branch</span></div>
+<div class="danger-row"><code>git branch -D</code><span class="danger-alt">Safer: git branch -d after merge</span></div>
+<div class="danger-row"><code>git stash clear</code><span class="danger-alt">Safer: git stash drop stash@{n} one at a time</span></div>
+        </section>
+      </div>
+    </main>
+
+    <aside class="aside">
+      <section class="card">
+        <div class="hd"><h2>Search &amp; filter</h2><div class="pill">cheat sheet</div></div>
+        <div class="bd">
+          <div class="search">
+            <input id="search" type="search" placeholder="Search commands (e.g. stash, rebase, push)…" aria-label="Search Git commands" />
+          </div>
+          <div class="tagrow" id="tags">
+            <span class="tag active" data-tag="all">All</span>
+            <span class="tag" data-tag="setup">Setup</span>
+            <span class="tag" data-tag="daily">Daily</span>
+            <span class="tag" data-tag="branch">Branch</span>
+            <span class="tag" data-tag="remote">Remote</span>
+            <span class="tag" data-tag="undo">Undo</span>
+            <span class="tag" data-tag="workflow">Workflow</span>
+            <span class="tag" data-tag="danger">Danger</span>
+          </div>
+        </div>
+      </section>
+      <section class="card">
+        <div class="hd"><h2>Beginner workflow</h2><div class="pill">copy</div></div>
+        <div class="bd">
+          <div class="codebox">
+            <div class="codebar"><span>90% flow</span><button class="btn" type="button" data-copy="#cmd-144">Copy</button></div>
+            <pre id="cmd-144">git status
+git switch main
+git pull
+git switch -c feature/my-work
+# make changes
+git status
+git add .
+git commit -m "Describe the change"
+git push -u origin feature/my-work
+# open pull request on GitHub</pre>
+          </div>
+        </div>
+      </section>
+      <section class="card">
+        <div class="hd"><h2>Related</h2></div>
+        <div class="bd" style="font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:8px;">
+          <a href="glossary/version-control-git.html">What is Git? (glossary)</a>
+          <a href="pull-requests-github.html">Pull requests on GitHub</a>
+          <a href="get-started-coding.html">Web dev vocabulary 101</a>
+        </div>
+      </section>
+    </aside>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><span class="ok" aria-hidden="true"></span><span id="toastText">Copied.</span></div>
+
+<footer>
+  <p>Part of <a href="editor.html">code.hibot.space</a> — free, no sign-up, no tracking.</p>
+  <p style="margin-top:6px;font-size:.8rem">
+    <a href="git-command-reference.html">Git Reference</a> &nbsp;·&nbsp;
+    <a href="pull-requests-github.html">Pull Requests</a> &nbsp;·&nbsp;
+    <a href="glossary/version-control-git.html">Version Control</a> &nbsp;·&nbsp;
+    <a href="learn.html">Learn</a> &nbsp;·&nbsp;
+    <a href="glossary.html">Glossary</a>
+  </p>
+</footer>
+
+<a href="#" class="back-top" id="back-top" aria-label="Back to top">&#x2191;</a>
+
+<script>
+(function () {
+  var $ = function (s, r) { r = r || document; return r.querySelector(s); };
+  var $$ = function (s, r) { r = r || document; return Array.from(r.querySelectorAll(s)); };
+  var toast = $("#toast"), toastText = $("#toastText"), timer;
+  function showToast(msg) {
+    toastText.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(timer);
+    timer = setTimeout(function () { toast.classList.remove("show"); }, 1400);
+  }
+  function copyText(text) {
+    var p = navigator.clipboard && navigator.clipboard.writeText
+      ? navigator.clipboard.writeText(text).then(function () { showToast("Copied to clipboard."); })
+      : Promise.resolve((function () {
+          var ta = document.createElement("textarea");
+          ta.value = text; document.body.appendChild(ta); ta.select();
+          document.execCommand("copy"); ta.remove(); showToast("Copied (fallback).");
+        })());
+    if (p && p.catch) p.catch(function () { showToast("Copy failed."); });
+  }
+  $$("[data-copy]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var el = $(btn.getAttribute("data-copy"));
+      if (el) copyText(el.textContent.trim());
+    });
+  });
+  var beginnerPre = $("#cmd-144");
+  $("#copyBeginnerBtn").addEventListener("click", function () {
+    if (beginnerPre) copyText(beginnerPre.textContent.trim());
+  });
+  var cards = $$(".cmd-card, .combo-item", $("#mainContent"));
+  $("#expandAllBtn").addEventListener("click", function () {
+    $$("details.cmd-card, details.workflow-card", $("#mainContent")).forEach(function (d) { d.open = true; });
+    showToast("Expanded all commands.");
+  });
+  $("#collapseAllBtn").addEventListener("click", function () {
+    $$("details.cmd-card, details.workflow-card", $("#mainContent")).forEach(function (d) { d.open = false; });
+    showToast("Collapsed all commands.");
+  });
+  var activeTag = "all";
+  var searchEl = $("#search");
+  var countPill = $("#countPill");
+  function norm(s) { return (s || "").toLowerCase(); }
+  function tagMatch(tags) {
+    if (activeTag === "all") return true;
+    return norm(tags).indexOf(activeTag) !== -1;
+  }
+  function applyFilters() {
+    var q = norm(searchEl.value);
+    var n = 0;
+    cards.forEach(function (el) {
+      var tags = el.getAttribute("data-tags") || "";
+      var text = el.textContent || "";
+      var ok = tagMatch(tags) && (!q || norm(text).indexOf(q) !== -1);
+      el.style.display = ok ? "" : "none";
+      if (ok) n++;
+    });
+    countPill.textContent = n + " visible";
+  }
+  $$(".tag", $("#tags")).forEach(function (t) {
+    t.addEventListener("click", function () {
+      $$(".tag", $("#tags")).forEach(function (x) { x.classList.remove("active"); });
+      t.classList.add("active");
+      activeTag = t.getAttribute("data-tag");
+      applyFilters();
+    });
+  });
+  searchEl.addEventListener("input", applyFilters);
+  applyFilters();
+  var backTop = $("#back-top");
+  window.addEventListener("scroll", function () {
+    backTop.classList.toggle("visible", window.scrollY > 400);
+  });
+  backTop.addEventListener("click", function (e) {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+})();
+</script>
+</body>
+</html>

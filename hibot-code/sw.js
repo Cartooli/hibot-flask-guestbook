@@ -5,7 +5,7 @@
    CACHE_NAME must match the `VERSION` file at the repo root. Bump both
    together on every release so clients evict the old cache on activate.
 */
-const CACHE_NAME = 'bws-v2.13.8';
+const CACHE_NAME = 'bws-v2.13.9';
 const CORE_ASSETS = [
   '/',
   '/index.html',
@@ -32,6 +32,7 @@ const CORE_ASSETS = [
   '/ai-coding-landscape-2026.html',
   '/ai-roi-calculator.html',
   '/pull-requests-github.html',
+  '/git-command-reference.html',
   '/learn-to-code-age-12.html',
   '/how-backends-work-vercel-railway.html',
   '/ai-build-stack.html',

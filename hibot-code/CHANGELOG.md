@@ -3,6 +3,14 @@
 Canonical version lives in [`VERSION`](VERSION); the service worker
 (`sw.js`) cache key must match it on every release.
 
+## Version 2.13.9 — Git command reference (June 2026)
+
+- **Content:** New **Git Command Reference** page (`git-command-reference.html`) — 105 accordion command cards with plain-English explanations, tag filters, search, beginner mental model, workflow combos, and dangerous-command callouts. SEO: canonical, Open Graph, `TechArticle` + `FAQPage` JSON-LD.
+- **Cross-links:** Linked from `learn.html` (nav + tools grid), `pull-requests-github.html`, and `glossary/version-control-git.html`.
+- **Sitemap:** `git-command-reference.html` added at priority 0.9.
+- **Tooling:** `scripts/generate-git-command-reference.mjs` for regenerating the page from source data.
+- **PWA:** `VERSION` / `sw.js` `CACHE_NAME` → `2.13.9` / `bws-v2.13.9`; `/git-command-reference.html` added to `CORE_ASSETS`.
+
 ## Version 2.13.8 — Viewer short links (24h) (June 2026)
 
 - **Viewer:** **Short link (24h)** toolbar button — `POST /api/viewer-share` stores HTML/CSS/JS in Upstash Redis (~24h TTL, ~400 KB cap, rate limit). **`?share=<id>`** loads that snapshot before hash / localStorage; banner on missing link, expiry, or missing server config (e.g. static-only hosts). Editing strips `?share=` like `#code=`. **Share** now `replaceState`s to `pathname#code=` so query params do not linger.
