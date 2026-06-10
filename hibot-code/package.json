@@ -1,5 +1,6 @@
 {
-  "name": "web-studio-codemirror-bundle",
+  "name": "hibot-code",
+  "version": "2.13.8",
   "private": true,
   "scripts": {
     "build": "rollup -c rollup.config.mjs -o codemirror-bundle.js"
