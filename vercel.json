@@ -1,7 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-  "public": true,
   "framework": null,
   "installCommand": "cd hibot-code && npm install",
   "buildCommand": "cd hibot-code && npm run build",

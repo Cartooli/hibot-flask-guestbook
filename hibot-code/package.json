@@ -3,7 +3,9 @@
   "version": "2.13.8",
   "private": true,
   "scripts": {
-    "build": "rollup -c rollup.config.mjs -o codemirror-bundle.js"
+    "build": "rollup -c rollup.config.mjs -o codemirror-bundle.js",
+    "generate-templates:dry": "node ../scripts/generate-template-readmes.js --dry-run",
+    "generate-templates:push": "node ../scripts/generate-template-readmes.js --push"
   },
   "dependencies": {
     "@upstash/ratelimit": "^2.0.5",
