@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Guestbook</h1>
+  <p class="sub">Leave a message. Be kind — it's a wall everyone can read.</p>
+
+  <form method="post" action="{{ url_for('index') }}" class="form">
+    <input type="text" name="name" maxlength="{{ name_max }}" placeholder="Your name (optional)" />
+    <textarea name="body" rows="3" maxlength="{{ message_max }}" placeholder="Your message…" required></textarea>
+    <button type="submit" class="btn">Sign the guestbook</button>
+  </form>
+
+  <section class="messages" aria-live="polite">
+    {% for m in messages %}
+      {# name and body are auto-escaped by Jinja2 — typed HTML shows as text, never runs. #}
+      <article class="msg">
+        <header><b>{{ m.name }}</b> <time>{{ m.created_at }}</time></header>
+        <p>{{ m.body }}</p>
+      </article>
+    {% else %}
+      <p class="empty">No messages yet. Be the first.</p>
+    {% endfor %}
+  </section>
+{% endblock %}

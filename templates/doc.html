@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} — Hi Bot{% endblock %}
+{% block content %}
+  <h1>{{ title }}</h1>
+  {# Shown as plain text and auto-escaped — safe to render the raw document. #}
+  <pre class="doc">{{ content }}</pre>
+{% endblock %}

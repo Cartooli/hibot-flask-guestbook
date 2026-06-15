@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://code.hibot.space/sitemap.xml
