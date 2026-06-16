@@ -22,6 +22,12 @@ Built with **Flask + SQLite**.
 
 Open the demo and see it in action, then rebuild it your way on [code.hibot.space](https://code.hibot.space/edtech-tutorials.html).
 
+## Step-by-Step Walkthrough
+
+New to this? Follow the guided, beginner-friendly walkthrough — from cloning this repo to running it, making your first change, and deploying it:
+
+**[Build It Yourself: hibot-flask-guestbook →](https://code.hibot.space/build-flask-guestbook.html)**
+
 ## License
 
 MIT. See LICENSE for details.
