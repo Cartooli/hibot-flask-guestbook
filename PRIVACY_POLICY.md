@@ -4,7 +4,7 @@
 
 **Service:** [YOUR APP NAME]
 **Operator:** Hi, Bot
-**Contact:** rob@cartooli.com
+**Contact:** open a GitHub Issue at https://github.com/Cartooli/hibot-flask-guestbook/issues (no public email)
 **Last updated:** [DATE]
 
 ## What we collect
@@ -17,7 +17,7 @@ As shipped, there are no accounts, no passwords, no analytics, and no third-part
 Your hosting provider may keep standard server logs (such as IP addresses) for security and reliability. These are controlled by your host; review their policy.
 
 ## Retention & removal
-Messages stay until removed. To request removal of a message, email rob@cartooli.com. (As shipped, removal is manual — delete the row from the database, or add an admin tool.)
+Messages stay until removed. To request removal of a message, open a GitHub Issue at https://github.com/Cartooli/hibot-flask-guestbook/issues. (As shipped, removal is manual — delete the row from the database, or add an admin tool.)
 
 ## Children
 This app is general-audience and does not knowingly collect personal information from children. Don't let children post personal details.
@@ -26,4 +26,4 @@ This app is general-audience and does not knowingly collect personal information
 If you add accounts, analytics, email, or third-party services, update this policy to describe what you collect, why, and with whom it's shared.
 
 ## Contact
-Questions? Email rob@cartooli.com.
+Questions? Open a GitHub Issue at https://github.com/Cartooli/hibot-flask-guestbook/issues.
