@@ -6,7 +6,7 @@
 
 **Service:** [YOUR APP NAME]
 **Operator:** Hi, Bot
-**Contact:** rob@cartooli.com
+**Contact:** open a GitHub Issue at https://github.com/Cartooli/hibot-flask-guestbook/issues (no public email)
 **Governing law:** [JURISDICTION]
 **Last updated:** [DATE]
 
@@ -32,4 +32,4 @@ The app is provided "as is," without warranties. To the extent permitted by law,
 We may update these terms. Continued use after changes means you accept them.
 
 ## 8. Contact
-Questions or removal requests? Email rob@cartooli.com.
+Questions or removal requests? Open a GitHub Issue at https://github.com/Cartooli/hibot-flask-guestbook/issues.
