@@ -1,0 +1,20 @@
+# Secrets: keep API keys and passwords out of git
+.env
+.env.*
+!.env.example
+
+# Python build and cache files
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Local databases (created on first run)
+*.db
+*.db-journal
+*.sqlite3
+
+# OS files
+.DS_Store
+Thumbs.db
